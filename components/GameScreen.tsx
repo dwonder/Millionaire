@@ -116,7 +116,18 @@ const GameScreen: React.FC<GameScreenProps> = ({ playerName, onEndGame, playSoun
   const useLifeline = useCallback((type: LifelineType) => {
     if (!lifelines[type]) return;
     
-    playSound(SoundType.Lifeline);
+    switch(type) {
+      case LifelineType.FiftyFifty:
+        playSound(SoundType.FiftyFifty);
+        break;
+      case LifelineType.AskAudience:
+        playSound(SoundType.AskAudience);
+        break;
+      case LifelineType.PhoneFriend:
+        playSound(SoundType.PhoneFriend);
+        break;
+    }
+    
     setLifelines(prev => ({ ...prev, [type]: false }));
 
     if (type === LifelineType.FiftyFifty) {

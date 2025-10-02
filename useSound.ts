@@ -7,11 +7,13 @@ export enum SoundType {
   Suspense = 'suspense',
   Correct = 'correct',
   Wrong = 'wrong',
-  Lifeline = 'lifeline',
   Win = 'win',
   Lose = 'lose',
   FinalAnswer = 'final_answer',
   Tick = 'tick',
+  FiftyFifty = 'fiftyFifty',
+  AskAudience = 'askAudience',
+  PhoneFriend = 'phoneFriend',
 }
 
 const soundMap: Record<SoundType, string> = {
@@ -20,11 +22,13 @@ const soundMap: Record<SoundType, string> = {
   [SoundType.Suspense]: 'https://cdn.pixabay.com/audio/2023/09/21/audio_a124c61a5b.mp3',
   [SoundType.Correct]: 'https://cdn.pixabay.com/audio/2022/03/10/audio_c295628b43.mp3',
   [SoundType.Wrong]: 'https://cdn.pixabay.com/audio/2022/03/15/audio_731c5520a8.mp3',
-  [SoundType.Lifeline]: 'https://cdn.pixabay.com/audio/2022/04/07/audio_49219293cf.mp3',
   [SoundType.Win]: 'https://cdn.pixabay.com/audio/2022/09/23/audio_0333b64604.mp3',
   [SoundType.Lose]: 'https://cdn.pixabay.com/audio/2023/05/20/audio_1411516109.mp3',
   [SoundType.FinalAnswer]: 'https://cdn.pixabay.com/audio/2021/08/04/audio_12b0c7444c.mp3',
   [SoundType.Tick]: 'https://cdn.pixabay.com/audio/2022/10/26/audio_887c36616b.mp3',
+  [SoundType.FiftyFifty]: 'https://cdn.pixabay.com/audio/2022/03/22/audio_29b2c83a54.mp3',
+  [SoundType.AskAudience]: 'https://cdn.pixabay.com/audio/2024/02/28/audio_1919811e51.mp3',
+  [SoundType.PhoneFriend]: 'https://cdn.pixabay.com/audio/2022/04/18/audio_51c626d116.mp3',
 };
 
 export const useSound = () => {
