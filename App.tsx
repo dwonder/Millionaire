@@ -9,6 +9,7 @@ import { useSound, SoundType } from './useSound';
 
 const App: React.FC = () => {
   const [gameState, setGameState] = useState<GameState>(GameState.Start);
+  const [playerName, setPlayerName] = useState<string>('');
   const [finalScore, setFinalScore] = useState<string>('₦0');
   const [isWinner, setIsWinner] = useState<boolean>(false);
   const { playSound, stopSound, playMusic, stopMusic } = useSound();
@@ -29,7 +30,8 @@ const App: React.FC = () => {
     }
   }, [gameState, playMusic, stopMusic]);
 
-  const startGame = useCallback(() => {
+  const startGame = useCallback((name: string) => {
+    setPlayerName(name.trim());
     setGameState(GameState.Playing);
     setFinalScore('₦0');
     setIsWinner(false);
@@ -60,13 +62,14 @@ const App: React.FC = () => {
     switch (gameState) {
       case GameState.Playing:
         return <GameScreen 
+                  playerName={playerName}
                   onEndGame={endGame} 
                   playSound={playSound} 
                   stopSound={stopSound} 
                   playMusic={playMusic}
                />;
       case GameState.End:
-        return <EndScreen score={finalScore} onRestart={startGame} isWinner={isWinner} />;
+        return <EndScreen score={finalScore} onRestart={() => setGameState(GameState.Start)} isWinner={isWinner} playerName={playerName} />;
       case GameState.Start:
       default:
         return <StartScreen onStart={startGame} />;

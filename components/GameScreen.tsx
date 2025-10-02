@@ -8,16 +8,20 @@ import QuestionBox from './QuestionBox';
 import AnswerOption from './AnswerOption';
 import AudiencePollModal from './AudiencePollModal';
 import PhoneFriendModal from './PhoneFriendModal';
+import Timer from './Timer';
 import { SoundType } from '../useSound';
 
 interface GameScreenProps {
+  playerName: string;
   onEndGame: (currentQuestionIndex: number, walkedAway?: boolean) => void;
   playSound: (type: SoundType, loop?: boolean) => HTMLAudioElement;
   stopSound: (type: SoundType) => void;
   playMusic: (type: SoundType) => void;
 }
 
-const GameScreen: React.FC<GameScreenProps> = ({ onEndGame, playSound, stopSound, playMusic }) => {
+const TOTAL_TIME = 60;
+
+const GameScreen: React.FC<GameScreenProps> = ({ playerName, onEndGame, playSound, stopSound, playMusic }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [question, setQuestion] = useState<Question>(QUESTIONS[0]);
   const [lifelines, setLifelines] = useState<Lifelines>({ fiftyFifty: true, askAudience: true, phoneFriend: true });
@@ -27,6 +31,7 @@ const GameScreen: React.FC<GameScreenProps> = ({ onEndGame, playSound, stopSound
   const [showAudiencePoll, setShowAudiencePoll] = useState(false);
   const [showPhoneFriend, setShowPhoneFriend] = useState(false);
   const [isConfirming, setIsConfirming] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(TOTAL_TIME);
 
   useEffect(() => {
     setQuestion(QUESTIONS[currentQuestionIndex]);
@@ -34,6 +39,7 @@ const GameScreen: React.FC<GameScreenProps> = ({ onEndGame, playSound, stopSound
     setAnswerState(AnswerState.Default);
     setDisabledAnswers([]);
     setIsConfirming(false);
+    setTimeLeft(TOTAL_TIME);
     
     if (currentQuestionIndex >= 9) {
       playMusic(SoundType.Suspense);
@@ -42,6 +48,38 @@ const GameScreen: React.FC<GameScreenProps> = ({ onEndGame, playSound, stopSound
     }
 
   }, [currentQuestionIndex, playMusic]);
+
+  useEffect(() => {
+    if (isConfirming || answerState === AnswerState.Correct || answerState === AnswerState.Incorrect) {
+      stopSound(SoundType.Tick);
+      return;
+    }
+
+    const tickAudio = playSound(SoundType.Tick, true);
+    if(tickAudio) tickAudio.playbackRate = 1.0;
+
+    const intervalId = setInterval(() => {
+      setTimeLeft(prevTime => {
+        if (prevTime <= 1) {
+          clearInterval(intervalId);
+          stopSound(SoundType.Tick);
+          playSound(SoundType.Wrong); // Time's up
+          onEndGame(currentQuestionIndex);
+          return 0;
+        }
+        if (prevTime <= 11) {
+          if (tickAudio) tickAudio.playbackRate = 1.5;
+        }
+        return prevTime - 1;
+      });
+    }, 1000);
+
+    return () => {
+      clearInterval(intervalId);
+      stopSound(SoundType.Tick);
+    };
+  }, [answerState, isConfirming, currentQuestionIndex, onEndGame, playSound, stopSound]);
+
 
   const handleAnswerSelect = (answer: string) => {
     if (answerState === AnswerState.Default) {
@@ -125,8 +163,11 @@ const GameScreen: React.FC<GameScreenProps> = ({ onEndGame, playSound, stopSound
         <div>
           <LifelinesDisplay lifelines={lifelines} onUseLifeline={useLifeline} />
         </div>
-        <div className="flex-grow flex flex-col justify-center items-center my-8">
-            <QuestionBox questionText={question.question} questionNumber={currentQuestionIndex + 1} />
+        <div className="flex-grow flex flex-col justify-center items-center my-2">
+            <Timer timeLeft={timeLeft} totalTime={TOTAL_TIME} />
+            <div className="w-full mt-4">
+              <QuestionBox questionText={question.question} questionNumber={currentQuestionIndex + 1} />
+            </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {question.options.map((option, index) => (
@@ -154,6 +195,9 @@ const GameScreen: React.FC<GameScreenProps> = ({ onEndGame, playSound, stopSound
       </div>
 
       <div className="w-full lg:w-1/4">
+        <div className="bg-black/20 p-2 rounded-t-lg text-center">
+            <p className="text-xl font-bold text-yellow-300 truncate">{playerName}</p>
+        </div>
         <PrizeLadder currentLevel={currentQuestionIndex + 1} />
          <button
             onClick={handleWalkAway}

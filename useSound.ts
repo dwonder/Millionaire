@@ -11,6 +11,7 @@ export enum SoundType {
   Win = 'win',
   Lose = 'lose',
   FinalAnswer = 'final_answer',
+  Tick = 'tick',
 }
 
 const soundMap: Record<SoundType, string> = {
@@ -23,13 +24,14 @@ const soundMap: Record<SoundType, string> = {
   [SoundType.Win]: 'https://cdn.pixabay.com/audio/2022/09/23/audio_0333b64604.mp3',
   [SoundType.Lose]: 'https://cdn.pixabay.com/audio/2023/05/20/audio_1411516109.mp3',
   [SoundType.FinalAnswer]: 'https://cdn.pixabay.com/audio/2021/08/04/audio_12b0c7444c.mp3',
+  [SoundType.Tick]: 'https://cdn.pixabay.com/audio/2022/10/26/audio_887c36616b.mp3',
 };
 
 export const useSound = () => {
   const audioRef = useRef<Record<string, HTMLAudioElement>>({});
   const currentMusicRef = useRef<HTMLAudioElement | null>(null);
 
-  const playSound = useCallback((type: SoundType, loop = false) => {
+  const playSound = useCallback((type: SoundType, loop = false): HTMLAudioElement => {
     if (!audioRef.current[type]) {
       audioRef.current[type] = new Audio(soundMap[type]);
     }
