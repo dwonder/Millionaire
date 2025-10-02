@@ -1,0 +1,5 @@
+{
+  "name": "Who Wants to Be a Cybersecurity Millionaire?",
+  "description": "A gamified cybersecurity awareness training modeled on the famous quiz show. Employees answer multiple-choice questions to climb a prize ladder, using lifelines to help them become a Cybersecurity Millionaire.",
+  "requestFramePermissions": []
+}
