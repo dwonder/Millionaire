@@ -69,7 +69,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: 10,
-    question: 'Under the Nigeria Data Protection Regulation (NDPR), a key principle is "data minimization." What does this mean?',
+    question: 'Under the Nigeria Data Protection Act 2023, a key principle is "data minimization." What does this mean?',
     options: ['Collect as much data as possible', 'Collect only the data that is absolutely necessary for a specific purpose', 'Minimize the font size of your privacy policy', 'Store data for a minimum of 10 years'],
     correctAnswer: 'Collect only the data that is absolutely necessary for a specific purpose',
     explanation: 'Data minimization is a core privacy principle that requires organizations to limit the collection of personal information to what is directly relevant and necessary.',
