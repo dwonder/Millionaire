@@ -13,7 +13,7 @@ import { SoundType } from '../useSound';
 interface GameScreenProps {
   playerName: string;
   onEndGame: (currentQuestionIndex: number, walkedAway?: boolean) => void;
-  playSound: (type: SoundType, loop?: boolean) => HTMLAudioElement;
+  playSound: (type: SoundType, loop?: boolean) => HTMLAudioElement | null;
   stopSound: (type: SoundType) => void;
   playMusic: (type: SoundType) => void;
 }
