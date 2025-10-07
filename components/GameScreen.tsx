@@ -18,7 +18,7 @@ interface GameScreenProps {
   playMusic: (type: SoundType) => void;
 }
 
-const TOTAL_TIME = 60;
+const TOTAL_TIME = 30;
 
 const GameScreen: React.FC<GameScreenProps> = ({ playerName, onEndGame, playSound, stopSound, playMusic }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
