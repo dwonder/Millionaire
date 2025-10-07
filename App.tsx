@@ -13,8 +13,34 @@ const App: React.FC = () => {
   const [finalScore, setFinalScore] = useState<string>('₦0');
   const [isWinner, setIsWinner] = useState<boolean>(false);
   const { playSound, stopSound, playMusic, stopMusic } = useSound();
+  const [userInteracted, setUserInteracted] = useState(false);
+
+  // This effect will run once to set up the interaction listener.
+  useEffect(() => {
+    const unlockAudio = () => {
+      setUserInteracted(true);
+      window.removeEventListener('click', unlockAudio);
+      window.removeEventListener('keydown', unlockAudio);
+      window.removeEventListener('touchstart', unlockAudio);
+    };
+
+    window.addEventListener('click', unlockAudio);
+    window.addEventListener('keydown', unlockAudio);
+    window.addEventListener('touchstart', unlockAudio);
+
+    return () => {
+      window.removeEventListener('click', unlockAudio);
+      window.removeEventListener('keydown', unlockAudio);
+      window.removeEventListener('touchstart', unlockAudio);
+    };
+  }, []);
 
   useEffect(() => {
+    // Don't try to play music until the user has interacted with the page.
+    if (!userInteracted) {
+      return;
+    }
+
     switch(gameState) {
       case GameState.Start:
         stopMusic();
@@ -28,7 +54,7 @@ const App: React.FC = () => {
         stopMusic();
         break;
     }
-  }, [gameState, playMusic, stopMusic]);
+  }, [gameState, playMusic, stopMusic, userInteracted]);
 
   const startGame = useCallback((name: string) => {
     setPlayerName(name.trim());
@@ -43,9 +69,9 @@ const App: React.FC = () => {
       score = currentQuestionIndex > 0 ? PRIZE_LADDER[PRIZE_LADDER.length - currentQuestionIndex].prize : '₦0';
     } else {
        if (currentQuestionIndex >= 10) {
-        score = PRIZE_LADDER.find(p => p.level === 10)?.prize || '₦50,000';
+        score = PRIZE_LADDER.find(p => p.level === 10)?.prize || '₦5,000,000';
       } else if (currentQuestionIndex >= 5) {
-        score = PRIZE_LADDER.find(p => p.level === 5)?.prize || '₦5,000';
+        score = PRIZE_LADDER.find(p => p.level === 5)?.prize || '₦250,000';
       }
     }
    

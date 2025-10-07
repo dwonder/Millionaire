@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { QUESTIONS } from '../constants';
 import { Question, Lifelines, LifelineType, AnswerState } from '../types';
@@ -205,14 +204,16 @@ const GameScreen: React.FC<GameScreenProps> = ({ playerName, onEndGame, playSoun
           )}
       </div>
 
-      <div className="w-full lg:w-1/4">
-        <div className="bg-black/20 p-2 rounded-t-lg text-center">
+      <div className="w-full lg:w-1/4 lg:h-[90vh] flex flex-col">
+        <div className="bg-black/20 p-2 rounded-t-lg text-center flex-shrink-0">
             <p className="text-xl font-bold text-yellow-300 truncate">{playerName}</p>
         </div>
-        <PrizeLadder currentLevel={currentQuestionIndex + 1} />
+        <div className="flex-grow min-h-0">
+          <PrizeLadder currentLevel={currentQuestionIndex + 1} />
+        </div>
          <button
             onClick={handleWalkAway}
-            className="w-full mt-4 bg-red-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-red-700 transition-colors duration-200"
+            className="w-full mt-4 bg-red-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-red-700 transition-colors duration-200 flex-shrink-0"
           >
             Walk Away
         </button>

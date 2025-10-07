@@ -17,7 +17,7 @@ export enum SoundType {
 }
 
 const soundMap: Record<SoundType, string> = {
-  [SoundType.Start]: ' https://www.televisiontunes.com/uploads/audio/Who%20Wants%20To%20Be%20A%20Millionaire%20-%20Full.mp3',
+  [SoundType.Start]: 'https://cdn.pixabay.com/audio/2022/08/23/audio_8222421711.mp3',
   [SoundType.Play]: 'https://cdn.pixabay.com/audio/2022/02/07/audio_f5152b1979.mp3',
   [SoundType.Suspense]: 'https://cdn.pixabay.com/audio/2023/09/21/audio_a124c61a5b.mp3',
   [SoundType.Correct]: 'https://cdn.pixabay.com/audio/2022/03/10/audio_c295628b43.mp3',
