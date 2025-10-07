@@ -18,16 +18,16 @@ export enum SoundType {
 const soundMap: Record<SoundType, string> = {
   [SoundType.Start]: 'https://www.televisiontunes.com/uploads/audio/Who%20Wants%20To%20Be%20A%20Millionaire%20-%20Full.mp3',
   [SoundType.Play]: 'https://www.televisiontunes.com/uploads/audio/Who%20Wants%20to%20Be%20a%20Millionaire%20-%20US%20-%2001%20Opening%20Titles%201.mp3',
-  [SoundType.Suspense]: 'https://www.televisiontunes.com/uploads/audio/Who%20Wants%20To%20Be%20A%20Millionaire%20-%20Full.mp3',
+  [SoundType.Suspense]: 'https://www.televisiontunes.com/uploads/audio/Who%20Wants%20To%20Be%20A%20Millionaire%20-%201000000%20Question.mp3',
   [SoundType.Correct]: 'https://www.myinstants.com/media/sounds/millionaire_correct_answer.mp3',
   [SoundType.Wrong]: 'https://www.myinstants.com/media/sounds/wwtbam-wrong-answer.mp3',
   [SoundType.Win]: 'https://ia902905.us.archive.org/27/items/who-wants-to-be-a-millionaire-soundtrack/14.%20%241%2C000%2C000%20Win.mp3',
-  [SoundType.Lose]: 'https://www.myinstants.com/media/sounds/wwtbam-wrong-answer.mp3',
+  [SoundType.Lose]: 'https://www.televisiontunes.com/uploads/audio/Who%20Wants%20To%20Be%20A%20Millionaire%20-%20Out%20of%20Time.mp3',
   [SoundType.FinalAnswer]: 'https://ia902905.us.archive.org/27/items/who-wants-to-be-a-millionaire-soundtrack/09.%20Final%20Answer-.mp3',
-  [SoundType.Tick]: 'https://soundbible.com/mp3/Tick-Tock-Sound-Effect-2-db.mp3',
-  [SoundType.FiftyFifty]: 'https://ia902905.us.archive.org/27/items/who-wants-to-be-a-millionaire-soundtrack/04.%2050-50.mp3',
-  [SoundType.AskAudience]: 'https://ia902905.us.archive.org/27/items/who-wants-to-be-a-millionaire-soundtrack/03.%20Ask%20the%20Audience.mp3',
-  [SoundType.PhoneFriend]: 'https://ia902905.us.archive.org/27/items/who-wants-to-be-a-millionaire-soundtrack/02.%20Phone-a-Friend.mp3',
+  [SoundType.Tick]: 'https://www.televisiontunes.com/uploads/audio/Who%20Wants%20To%20Be%20A%20Millionaire%20-%20Question%20Music.mp3',
+  [SoundType.FiftyFifty]: 'https://www.televisiontunes.com/uploads/audio/Who%20Wants%20to%20Be%20a%20Millionaire%20-%20Music%20-%205050.mp3',
+  [SoundType.AskAudience]: 'https://www.televisiontunes.com/uploads/audio/Who%20Wants%20to%20Be%20a%20Millionaire%20-%20Music%20-%2016000F.mp3',
+  [SoundType.PhoneFriend]: 'https://www.televisiontunes.com/uploads/audio/Who%20Wants%20to%20Be%20a%20Millionaire%20-%20Music%20-%204Q.mp3',
 };
 
 export const useSound = () => {
