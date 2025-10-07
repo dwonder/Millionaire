@@ -6,34 +6,61 @@ import GameScreen from './components/GameScreen';
 import EndScreen from './components/EndScreen';
 import { PRIZE_LADDER } from './constants';
 import { useSound, SoundType } from './useSound';
+import { unlockAudio } from './audio';
+import { VolumeUpIcon, VolumeOffIcon } from './components/icons';
 
 const App: React.FC = () => {
   const [gameState, setGameState] = useState<GameState>(GameState.Start);
   const [playerName, setPlayerName] = useState<string>('');
   const [finalScore, setFinalScore] = useState<string>('₦0');
   const [isWinner, setIsWinner] = useState<boolean>(false);
-  const { playSound, stopSound, playMusic, stopMusic } = useSound();
+  const [isMuted, setIsMuted] = useState<boolean>(() => {
+    try {
+      const savedMute = localStorage.getItem('isMuted');
+      return savedMute ? JSON.parse(savedMute) : false;
+    } catch {
+      return false;
+    }
+  });
+  const { playSound, stopSound, playMusic, stopMusic, setMuted } = useSound();
   const [userInteracted, setUserInteracted] = useState(false);
+
+  // Effect to persist mute state to local storage
+  useEffect(() => {
+    try {
+      localStorage.setItem('isMuted', JSON.stringify(isMuted));
+    } catch (error) {
+      console.error("Could not save mute state to local storage:", error);
+    }
+  }, [isMuted]);
+
+  // Effect to apply mute state to all sounds
+  useEffect(() => {
+    setMuted(isMuted);
+  }, [isMuted, setMuted]);
+
 
   // This effect will run once to set up the interaction listener.
   useEffect(() => {
-    const unlockAudio = () => {
+    const handleInteraction = () => {
+      if (userInteracted) return;
+      unlockAudio();
       setUserInteracted(true);
-      window.removeEventListener('click', unlockAudio);
-      window.removeEventListener('keydown', unlockAudio);
-      window.removeEventListener('touchstart', unlockAudio);
+      window.removeEventListener('click', handleInteraction);
+      window.removeEventListener('keydown', handleInteraction);
+      window.removeEventListener('touchstart', handleInteraction);
     };
 
-    window.addEventListener('click', unlockAudio);
-    window.addEventListener('keydown', unlockAudio);
-    window.addEventListener('touchstart', unlockAudio);
+    window.addEventListener('click', handleInteraction);
+    window.addEventListener('keydown', handleInteraction);
+    window.addEventListener('touchstart', handleInteraction);
 
     return () => {
-      window.removeEventListener('click', unlockAudio);
-      window.removeEventListener('keydown', unlockAudio);
-      window.removeEventListener('touchstart', unlockAudio);
+      window.removeEventListener('click', handleInteraction);
+      window.removeEventListener('keydown', handleInteraction);
+      window.removeEventListener('touchstart', handleInteraction);
     };
-  }, []);
+  }, [userInteracted]);
 
   useEffect(() => {
     // Don't try to play music until the user has interacted with the page.
@@ -104,6 +131,13 @@ const App: React.FC = () => {
 
   return (
     <div className="bg-gradient-to-b from-gray-900 to-indigo-900 min-h-screen text-white flex items-center justify-center p-4 font-sans">
+      <button
+        onClick={() => setIsMuted(prev => !prev)}
+        className="fixed top-4 right-4 z-50 p-2 bg-black/30 rounded-full text-white hover:bg-black/50 transition-colors"
+        aria-label={isMuted ? "Unmute sound" : "Mute sound"}
+      >
+        {isMuted ? <VolumeOffIcon className="w-6 h-6" /> : <VolumeUpIcon className="w-6 h-6" />}
+      </button>
       <div className="w-full max-w-7xl mx-auto">
         {renderScreen()}
       </div>

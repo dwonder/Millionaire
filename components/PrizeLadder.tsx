@@ -40,7 +40,8 @@ const PrizeLadder: React.FC<PrizeLadderProps> = ({ currentLevel }) => {
         {PRIZE_LADDER.map((item, index) => (
           <li
             key={item.level}
-            ref={(el) => (itemRefs.current[index] = el)}
+            // FIX: The ref callback should not return a value. Changed from an implicit return arrow function to a block body.
+            ref={(el) => { itemRefs.current[index] = el; }}
             className={`
               flex justify-between items-center text-lg p-2 my-1 rounded transition-all duration-300 ease-in-out
               ${
