@@ -16,7 +16,7 @@ const PrizeLadder: React.FC<PrizeLadderProps> = ({ currentLevel }) => {
 
   useEffect(() => {
     // The prize ladder array is ordered from 15 down to 1. The map index is 0-14.
-    // The visual list is reversed, showing 1 at the bottom.
+    // The visual list is now ordered from top to bottom (15 to 1).
     // currentLevel 1 -> prize at PRIZE_LADDER[14] -> ref index 14
     // currentLevel 15 -> prize at PRIZE_LADDER[0] -> ref index 0
     // The correct index in the refs array is: PRIZE_LADDER.length - currentLevel
@@ -36,7 +36,7 @@ const PrizeLadder: React.FC<PrizeLadderProps> = ({ currentLevel }) => {
 
   return (
     <div className="bg-black/30 p-4 rounded-lg shadow-lg backdrop-blur-sm h-full">
-      <ul ref={listRef} className="h-full overflow-y-auto flex flex-col-reverse no-scrollbar">
+      <ul ref={listRef} className="h-full overflow-y-auto flex flex-col no-scrollbar">
         {PRIZE_LADDER.map((item, index) => (
           <li
             key={item.level}

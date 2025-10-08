@@ -57,7 +57,8 @@ export const useSound = () => {
   const setMuted = useCallback((muted: boolean) => {
     isMutedRef.current = muted;
     // Apply mute state to all preloaded audio elements
-    Object.values(audioRef.current).forEach(audio => {
+    // FIX: Explicitly type `audio` as `HTMLAudioElement` because type inference is failing.
+    Object.values(audioRef.current).forEach((audio: HTMLAudioElement) => {
       if (audio) {
         audio.muted = muted;
       }
