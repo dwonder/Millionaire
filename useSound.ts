@@ -30,10 +30,13 @@ const soundMap: Record<SoundType, string> = {
   [SoundType.PhoneFriend]: 'https://www.televisiontunes.com/uploads/audio/Who%20Wants%20to%20Be%20a%20Millionaire%20-%20Music%20-%204Q.mp3',
 };
 
+const musicTracks = [SoundType.Start, SoundType.Play, SoundType.Suspense];
+
 export const useSound = () => {
   // Store all audio elements in a ref
   const audioRef = useRef<Record<string, HTMLAudioElement>>({});
   const currentMusicRef = useRef<HTMLAudioElement | null>(null);
+  const currentSoundEffectRef = useRef<HTMLAudioElement | null>(null);
   const isMutedRef = useRef<boolean>(false);
   const preloaded = useRef(false);
 
@@ -67,9 +70,21 @@ export const useSound = () => {
     if (currentMusicRef.current) {
         currentMusicRef.current.muted = muted;
     }
+    if (currentSoundEffectRef.current) {
+        currentSoundEffectRef.current.muted = muted;
+    }
   }, []);
 
   const playSound = useCallback((type: SoundType, loop = false): HTMLAudioElement | null => {
+    const isMusic = musicTracks.includes(type);
+
+    // If it's a sound effect, stop the previous one.
+    if (!isMusic && currentSoundEffectRef.current) {
+        currentSoundEffectRef.current.pause();
+        currentSoundEffectRef.current.currentTime = 0;
+        currentSoundEffectRef.current = null;
+    }
+
     const audio = audioRef.current[type];
     
     // If sound not found (which shouldn't happen after preload), log an error.
@@ -94,6 +109,15 @@ export const useSound = () => {
       });
     }
 
+    if (!isMusic) {
+      currentSoundEffectRef.current = audio;
+      audio.onended = () => {
+        if (currentSoundEffectRef.current === audio) {
+          currentSoundEffectRef.current = null;
+        }
+      };
+    }
+
     return audio;
   }, []);
 
@@ -102,6 +126,9 @@ export const useSound = () => {
     if (audio) {
       audio.pause();
       audio.currentTime = 0;
+      if (currentSoundEffectRef.current === audio) {
+        currentSoundEffectRef.current = null;
+      }
     }
   }, []);
 
@@ -109,6 +136,11 @@ export const useSound = () => {
     if (currentMusicRef.current) {
       currentMusicRef.current.pause();
       currentMusicRef.current.currentTime = 0;
+    }
+    if (currentSoundEffectRef.current) {
+      currentSoundEffectRef.current.pause();
+      currentSoundEffectRef.current.currentTime = 0;
+      currentSoundEffectRef.current = null;
     }
     const music = playSound(type, true);
     if (music) {
