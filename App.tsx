@@ -12,7 +12,7 @@ import { VolumeUpIcon, VolumeOffIcon } from './components/icons';
 const App: React.FC = () => {
   const [gameState, setGameState] = useState<GameState>(GameState.Start);
   const [playerName, setPlayerName] = useState<string>('');
-  const [finalScore, setFinalScore] = useState<string>('₦0');
+  const [finalScore, setFinalScore] = useState<string>('€0');
   const [isWinner, setIsWinner] = useState<boolean>(false);
   const [isMuted, setIsMuted] = useState<boolean>(() => {
     try {
@@ -86,19 +86,19 @@ const App: React.FC = () => {
   const startGame = useCallback((name: string) => {
     setPlayerName(name.trim());
     setGameState(GameState.Playing);
-    setFinalScore('₦0');
+    setFinalScore('€0');
     setIsWinner(false);
   }, []);
 
   const endGame = useCallback((currentQuestionIndex: number, walkedAway: boolean = false) => {
-    let score = '₦0';
+    let score = '€0';
     if (walkedAway) {
-      score = currentQuestionIndex > 0 ? PRIZE_LADDER[PRIZE_LADDER.length - currentQuestionIndex].prize : '₦0';
+      score = currentQuestionIndex > 0 ? PRIZE_LADDER[PRIZE_LADDER.length - currentQuestionIndex].prize : '€0';
     } else {
        if (currentQuestionIndex >= 10) {
-        score = PRIZE_LADDER.find(p => p.level === 10)?.prize || '₦5,000,000';
+        score = PRIZE_LADDER.find(p => p.level === 10)?.prize || '€32,000';
       } else if (currentQuestionIndex >= 5) {
-        score = PRIZE_LADDER.find(p => p.level === 5)?.prize || '₦250,000';
+        score = PRIZE_LADDER.find(p => p.level === 5)?.prize || '€1,000';
       }
     }
    
