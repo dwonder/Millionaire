@@ -146,9 +146,13 @@ const App: React.FC = () => {
 
   const endGame = useCallback((questionIndex: number, walkedAway: boolean = false) => {
     let score = '€0';
-    if (walkedAway) {
+    const isWinning = questionIndex === 15;
+
+    if (isWinning) {
+      score = PRIZE_LADDER.find(p => p.level === 15)?.prize || '€1,000,000';
+    } else if (walkedAway) {
       score = questionIndex > 0 ? PRIZE_LADDER[PRIZE_LADDER.length - questionIndex].prize : '€0';
-    } else {
+    } else { // Incorrect answer
        if (questionIndex >= 10) {
         score = PRIZE_LADDER.find(p => p.level === 10)?.prize || '€32,000';
       } else if (questionIndex >= 5) {
@@ -156,7 +160,6 @@ const App: React.FC = () => {
       }
     }
    
-    const isWinning = questionIndex === 15;
     stopMusic();
     playSound(isWinning ? SoundType.Win : SoundType.Lose);
 
