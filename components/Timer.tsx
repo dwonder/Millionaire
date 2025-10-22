@@ -11,17 +11,17 @@ const Timer: React.FC<TimerProps> = ({ timeLeft, totalTime }) => {
   const offset = circumference - (timeLeft / totalTime) * circumference;
 
   const getTimerColor = () => {
-    if (timeLeft <= 10) return 'stroke-red-500';
-    if (timeLeft <= 20) return 'stroke-yellow-400';
-    return 'stroke-cyan-400';
+    if (timeLeft <= 20) return 'stroke-red-600';
+    if (timeLeft <= 40) return 'stroke-[#D40511]';
+    return 'stroke-gray-700';
   };
 
   return (
-    <div className={`relative w-32 h-32 ${timeLeft <= 10 ? 'animate-pulse' : ''}`}>
+    <div className={`relative w-32 h-32 ${timeLeft <= 20 ? 'animate-pulse' : ''}`}>
       <svg className="w-full h-full" viewBox="0 0 120 120">
         {/* Background circle */}
         <circle
-          className="stroke-current text-gray-700"
+          className="stroke-current text-gray-300"
           strokeWidth="10"
           fill="transparent"
           r={radius}
@@ -43,7 +43,7 @@ const Timer: React.FC<TimerProps> = ({ timeLeft, totalTime }) => {
         />
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className={`text-4xl md:text-5xl font-bold ${timeLeft <= 10 ? 'text-red-500' : 'text-white'}`}>
+        <span className={`text-4xl md:text-5xl font-bold ${timeLeft <= 20 ? 'text-red-600' : 'text-gray-800'}`}>
           {timeLeft}
         </span>
       </div>

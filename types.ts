@@ -39,3 +39,9 @@ export enum AnswerState {
     Incorrect = 'incorrect',
     Disabled = 'disabled',
 }
+
+export interface SavedGameState {
+  playerName: string;
+  currentQuestionIndex: number;
+  lifelines: Lifelines;
+}

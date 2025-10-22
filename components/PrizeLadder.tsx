@@ -35,7 +35,7 @@ const PrizeLadder: React.FC<PrizeLadderProps> = ({ currentLevel }) => {
   }, [currentLevel]);
 
   return (
-    <div className="bg-black/30 p-4 rounded-lg shadow-lg backdrop-blur-sm h-full">
+    <div className="bg-white/30 p-4 rounded-lg shadow-lg backdrop-blur-sm h-full">
       <ul ref={listRef} className="h-full overflow-y-auto flex flex-col no-scrollbar">
         {PRIZE_LADDER.map((item, index) => (
           <li
@@ -46,10 +46,10 @@ const PrizeLadder: React.FC<PrizeLadderProps> = ({ currentLevel }) => {
               flex justify-between items-center text-lg p-2 my-1 rounded transition-all duration-300 ease-in-out
               ${
                 currentLevel === item.level
-                  ? 'bg-yellow-500 text-black font-bold scale-105 shadow-lg shadow-yellow-500/50'
+                  ? 'bg-[#D40511] text-white font-bold scale-105 shadow-lg shadow-red-500/50'
                   : item.isSafeZone
-                  ? 'text-cyan-300 font-semibold bg-indigo-900/60'
-                  : 'text-gray-300'
+                  ? 'text-gray-800 font-bold bg-white/80'
+                  : 'text-gray-700'
               }
             `}
           >

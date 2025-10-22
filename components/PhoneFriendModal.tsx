@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Question } from '../types';
 
@@ -36,22 +35,22 @@ const PhoneFriendModal: React.FC<PhoneFriendModalProps> = ({ question, onClose }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
-      <div className="bg-gray-800 w-full max-w-lg p-6 rounded-lg shadow-2xl text-center border-2 border-yellow-400">
-        <h2 className="text-3xl font-bold mb-4">Phone a Friend</h2>
-        <p className="text-xl text-gray-300 mb-6">Calling {friend}...</p>
-        <div className="h-24 flex items-center justify-center p-4 bg-black/30 rounded-lg">
+      <div className="bg-white w-full max-w-lg p-6 rounded-lg shadow-2xl text-center border-2 border-[#D40511]">
+        <h2 className="text-3xl font-bold mb-4 text-gray-800">Phone a Friend</h2>
+        <p className="text-xl text-gray-600 mb-6">Calling {friend}...</p>
+        <div className="h-24 flex items-center justify-center p-4 bg-gray-100 rounded-lg">
           {isLoading ? (
-            <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 rounded-full bg-yellow-400 animate-pulse"></div>
-              <div className="w-4 h-4 rounded-full bg-yellow-400 animate-pulse delay-200"></div>
-              <div className="w-4 h-4 rounded-full bg-yellow-400 animate-pulse delay-400"></div>
+            <div className="flex items-center space-x-2 text-gray-800">
+              <div className="w-4 h-4 rounded-full bg-[#D40511] animate-pulse"></div>
+              <div className="w-4 h-4 rounded-full bg-[#D40511] animate-pulse delay-200"></div>
+              <div className="w-4 h-4 rounded-full bg-[#D40511] animate-pulse delay-400"></div>
               <span className="ml-2 text-lg">Thinking...</span>
             </div>
           ) : (
-            <p className="text-2xl text-yellow-400 font-semibold">{advice}</p>
+            <p className="text-2xl text-[#D40511] font-semibold">{advice}</p>
           )}
         </div>
-        <button onClick={onClose} className="mt-8 bg-yellow-500 text-black font-bold py-2 px-8 rounded-full hover:bg-yellow-400 disabled:opacity-50" disabled={isLoading}>
+        <button onClick={onClose} className="mt-8 bg-[#D40511] text-white font-bold py-2 px-8 rounded-full hover:opacity-90 disabled:opacity-50" disabled={isLoading}>
           Thanks, {friend.split(' ')[0]}!
         </button>
       </div>

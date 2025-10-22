@@ -1,13 +1,15 @@
-
 import React, { useState } from 'react';
 import { LogoIcon } from './icons';
+import { SavedGameState } from '../types';
 
 interface StartScreenProps {
   onStart: (name: string) => void;
+  onResume: (savedGame: SavedGameState) => void;
+  savedGame: SavedGameState | null;
 }
 
-const StartScreen: React.FC<StartScreenProps> = ({ onStart }) => {
-  const [name, setName] = useState('');
+const StartScreen: React.FC<StartScreenProps> = ({ onStart, onResume, savedGame }) => {
+  const [name, setName] = useState(savedGame?.playerName || '');
 
   const handleStart = () => {
     if (name.trim()) {
@@ -23,16 +25,16 @@ const StartScreen: React.FC<StartScreenProps> = ({ onStart }) => {
 
   return (
     <div className="text-center flex flex-col items-center justify-center h-screen animate-fadeIn">
-      <div className="bg-white/10 p-8 rounded-full mb-8 shadow-2xl">
-        <LogoIcon className="h-24 w-24 text-yellow-400" />
+      <div className="bg-[#D40511] p-8 rounded-full mb-8 shadow-2xl">
+        <LogoIcon className="h-24 w-24 text-white" />
       </div>
-      <h1 className="text-4xl md:text-6xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-amber-500 mb-4">
+      <h1 className="text-4xl md:text-6xl font-black tracking-tight text-[#D40511] mb-2">
         Who Wants to Be a
       </h1>
-      <h2 className="text-3xl md:text-5xl font-bold text-white mb-8">
+      <h2 className="text-3xl md:text-5xl font-bold text-gray-800 mb-8">
         Cybersecurity Millionaire?
       </h2>
-      <p className="max-w-2xl mx-auto text-lg text-gray-300 mb-8">
+      <p className="max-w-2xl mx-auto text-lg text-gray-700 mb-8">
         Test your knowledge, trust your instincts, and climb the ladder. One wrong click could cost you everything...
       </p>
       <input
@@ -41,18 +43,29 @@ const StartScreen: React.FC<StartScreenProps> = ({ onStart }) => {
         onChange={(e) => setName(e.target.value)}
         onKeyPress={handleKeyPress}
         placeholder="Enter Your Name"
-        className="w-full max-w-md bg-white/10 text-white placeholder-gray-400 text-center text-2xl p-4 rounded-full border-2 border-transparent focus:border-yellow-400 focus:outline-none transition-all duration-300 mb-8 shadow-inner"
+        className="w-full max-w-md bg-white text-gray-800 placeholder-gray-500 text-center text-2xl p-4 rounded-full border-2 border-gray-300 focus:border-[#D40511] focus:outline-none transition-all duration-300 mb-8 shadow-inner"
         aria-label="Player Name"
       />
       <button
         onClick={handleStart}
         disabled={!name.trim()}
-        className={`bg-gradient-to-r from-yellow-400 to-amber-600 text-gray-900 font-bold py-4 px-12 rounded-full text-2xl shadow-lg transform transition-all duration-300 ease-in-out ${
-          !name.trim() ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105'
+        className={`bg-[#D40511] text-white font-bold py-4 px-12 rounded-full text-2xl shadow-lg transform transition-all duration-300 ease-in-out ${
+          !name.trim() ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 hover:opacity-90'
         }`}
       >
-        Start Game
+        {savedGame ? 'Start New Game' : 'Start Game'}
       </button>
+      {savedGame && (
+        <div className="mt-8 text-center">
+          <p className="text-gray-600 mb-2">or</p>
+          <button
+            onClick={() => onResume(savedGame)}
+            className="bg-[#D40511] text-white font-bold py-4 px-12 rounded-full text-2xl shadow-lg hover:scale-105 hover:opacity-90 transform transition-transform duration-300 ease-in-out"
+          >
+            Resume: {savedGame.playerName} (Q{savedGame.currentQuestionIndex + 1})
+          </button>
+        </div>
+      )}
     </div>
   );
 };

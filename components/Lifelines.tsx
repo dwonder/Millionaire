@@ -19,12 +19,14 @@ const LifelineButton: React.FC<{
       onClick={() => isAvailable && onClick(type)}
       disabled={!isAvailable}
       aria-label={ariaLabel}
-      className={`relative w-16 h-16 md:w-20 md:h-20 rounded-full transition-all duration-300 transform
-        ${isAvailable ? 'bg-gradient-to-br from-yellow-400 to-amber-600 text-gray-900 shadow-lg hover:scale-110' : 'bg-gray-700 cursor-not-allowed'}
+      className={`relative w-16 h-16 md:w-20 md:h-20 rounded-full transition-all duration-300 transform overflow-hidden
+        ${isAvailable ? 'bg-[#D40511] text-white shadow-lg hover:scale-110 hover:opacity-90 active:scale-95' : 'bg-gray-400 cursor-not-allowed'}
       `}
     >
       {children}
-      {!isAvailable && <div className="absolute inset-0 bg-red-500/70 flex items-center justify-center text-white text-4xl font-black rounded-full">X</div>}
+      <div className={`absolute inset-0 bg-[#D40511]/90 flex items-center justify-center text-white text-5xl font-black rounded-full transition-opacity duration-500 ease-in-out ${isAvailable ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+        <span className="transform -rotate-12">X</span>
+      </div>
     </button>
   );
 };
@@ -48,7 +50,7 @@ const LifelinesDisplay: React.FC<LifelinesProps> = ({ lifelines, onUseLifeline }
                 >
                     {icon}
                 </LifelineButton>
-                <span className={`mt-2 text-white text-xs font-semibold transition-opacity ${!lifelines[type] ? 'opacity-50' : ''}`}>
+                <span className={`mt-2 text-gray-800 text-xs font-semibold transition-opacity ${!lifelines[type] ? 'opacity-50' : ''}`}>
                     {label}
                 </span>
             </div>

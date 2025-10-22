@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { AnswerState } from '../types';
 
@@ -10,18 +9,20 @@ interface AnswerOptionProps {
 }
 
 const AnswerOption: React.FC<AnswerOptionProps> = ({ optionLabel, optionText, state, onClick }) => {
+  const isHighlighted = state === AnswerState.Selected || state === AnswerState.Correct || state === AnswerState.Incorrect;
+  
   const getBackgroundColor = () => {
     switch (state) {
       case AnswerState.Selected:
-        return 'animate-pulse bg-gradient-to-r from-orange-500 to-yellow-500';
+        return 'animate-pulse bg-[#D40511]';
       case AnswerState.Correct:
-        return 'animate-flashCorrect bg-gradient-to-r from-green-500 to-teal-500';
+        return 'animate-flashCorrect bg-green-500';
       case AnswerState.Incorrect:
-        return 'animate-flashIncorrect bg-gradient-to-r from-red-500 to-rose-500';
+        return 'animate-flashIncorrect bg-red-600';
       case AnswerState.Disabled:
-        return 'bg-gray-700 opacity-50';
+        return 'bg-gray-300 text-gray-500 opacity-70';
       default:
-        return 'bg-gradient-to-r from-indigo-800 to-indigo-900 hover:from-indigo-700 hover:to-indigo-800';
+        return 'bg-white hover:bg-gray-100';
     }
   };
 
@@ -30,14 +31,15 @@ const AnswerOption: React.FC<AnswerOptionProps> = ({ optionLabel, optionText, st
       onClick={onClick}
       disabled={state === AnswerState.Disabled || state === AnswerState.Correct || state === AnswerState.Incorrect}
       className={`
-        w-full p-4 rounded-lg border-2 border-yellow-400
+        w-full p-4 rounded-lg border-2 border-[#D40511]
         flex items-center text-left text-xl font-medium
         transition-all duration-300 transform shadow-lg
         ${getBackgroundColor()}
+        ${isHighlighted ? 'text-white' : 'text-gray-800'}
         ${state !== AnswerState.Disabled ? 'cursor-pointer hover:scale-105' : 'cursor-not-allowed'}
       `}
     >
-      <span className="text-yellow-400 font-bold mr-4">{optionLabel}:</span>
+      <span className={`font-bold mr-4 ${isHighlighted ? 'text-white' : 'text-[#D40511]'}`}>{optionLabel}:</span>
       <span>{optionText}</span>
     </button>
   );

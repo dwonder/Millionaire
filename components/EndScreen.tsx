@@ -14,7 +14,7 @@ const EndScreen: React.FC<EndScreenProps> = ({ score, isWinner, onRestart, playe
     if (isWinner && typeof confetti === 'function') {
       const duration = 5 * 1000;
       const animationEnd = Date.now() + duration;
-      const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+      const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0, colors: ['#D40511', '#FFFFFF', '#000000'] };
 
       function randomInRange(min: number, max: number) {
         return Math.random() * (max - min) + min;
@@ -40,21 +40,21 @@ const EndScreen: React.FC<EndScreenProps> = ({ score, isWinner, onRestart, playe
     <div className="text-center flex flex-col items-center justify-center h-screen animate-fadeIn">
       {isWinner ? (
         <>
-          <h1 className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-teal-500 mb-4">
+          <h1 className="text-5xl md:text-7xl font-black text-[#D40511] mb-4">
             Congratulations, {playerName}!
           </h1>
-          <p className="text-2xl text-gray-200 mb-8">You are a Cybersecurity Millionaire!</p>
+          <p className="text-2xl text-gray-800 mb-8">You are a Cybersecurity Millionaire!</p>
         </>
       ) : (
-        <h1 className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-500 mb-4">
+        <h1 className="text-5xl md:text-7xl font-black text-[#D40511] mb-4">
           Game Over, {playerName}
         </h1>
       )}
-      <p className="text-xl text-gray-300 mb-4">You walk away with:</p>
-      <p className="text-6xl font-bold text-white mb-12">{score}</p>
+      <p className="text-xl text-gray-700 mb-4">You walk away with:</p>
+      <p className="text-6xl font-bold text-[#D40511] mb-12">{score}</p>
       <button
         onClick={onRestart}
-        className="bg-gradient-to-r from-yellow-400 to-amber-600 text-gray-900 font-bold py-4 px-12 rounded-full text-2xl shadow-lg hover:scale-105 transform transition-transform duration-300 ease-in-out"
+        className="bg-[#D40511] text-white font-bold py-4 px-12 rounded-full text-2xl shadow-lg hover:scale-105 hover:opacity-90 transform transition-transform duration-300 ease-in-out"
       >
         Play Again
       </button>

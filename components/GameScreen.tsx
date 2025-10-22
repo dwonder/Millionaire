@@ -16,14 +16,26 @@ interface GameScreenProps {
   playSound: (type: SoundType, loop?: boolean) => HTMLAudioElement | null;
   stopSound: (type: SoundType) => void;
   playMusic: (type: SoundType) => void;
+  currentQuestionIndex: number;
+  setCurrentQuestionIndex: React.Dispatch<React.SetStateAction<number>>;
+  lifelines: Lifelines;
+  setLifelines: React.Dispatch<React.SetStateAction<Lifelines>>;
 }
 
-const TOTAL_TIME = 30;
+const TOTAL_TIME = 60;
 
-const GameScreen: React.FC<GameScreenProps> = ({ playerName, onEndGame, playSound, stopSound, playMusic }) => {
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [question, setQuestion] = useState<Question>(QUESTIONS[0]);
-  const [lifelines, setLifelines] = useState<Lifelines>({ fiftyFifty: true, askAudience: true, phoneFriend: true });
+const GameScreen: React.FC<GameScreenProps> = ({ 
+  playerName, 
+  onEndGame, 
+  playSound, 
+  stopSound, 
+  playMusic, 
+  currentQuestionIndex,
+  setCurrentQuestionIndex,
+  lifelines,
+  setLifelines
+}) => {
+  const [question, setQuestion] = useState<Question>(QUESTIONS[currentQuestionIndex]);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [answerState, setAnswerState] = useState<AnswerState>(AnswerState.Default);
   const [disabledAnswers, setDisabledAnswers] = useState<string[]>([]);
@@ -66,7 +78,7 @@ const GameScreen: React.FC<GameScreenProps> = ({ playerName, onEndGame, playSoun
           onEndGame(currentQuestionIndex);
           return 0;
         }
-        if (prevTime <= 11) {
+        if (prevTime <= 21) {
           if (tickAudio) tickAudio.playbackRate = 1.5;
         }
         return prevTime - 1;
@@ -139,7 +151,7 @@ const GameScreen: React.FC<GameScreenProps> = ({ playerName, onEndGame, playSoun
     } else if (type === LifelineType.PhoneFriend) {
       setShowPhoneFriend(true);
     }
-  }, [lifelines, question, playSound]);
+  }, [lifelines, question, playSound, setLifelines]);
 
   const handleWalkAway = () => {
     onEndGame(currentQuestionIndex, true);
@@ -192,12 +204,12 @@ const GameScreen: React.FC<GameScreenProps> = ({ playerName, onEndGame, playSoun
         </div>
          {isConfirming && (
             <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-              <div className="bg-gray-800 p-8 rounded-lg shadow-2xl text-center">
-                <h2 className="text-3xl font-bold mb-4">Is that your final answer?</h2>
-                <p className="text-yellow-400 text-2xl mb-6">{selectedAnswer}</p>
+              <div className="bg-white p-8 rounded-lg shadow-2xl text-center">
+                <h2 className="text-3xl text-gray-800 font-bold mb-4">Is that your final answer?</h2>
+                <p className="text-[#D40511] text-2xl mb-6">{selectedAnswer}</p>
                 <div className="flex justify-center gap-4">
-                  <button onClick={handleConfirmationNo} className="bg-gray-600 text-white font-bold py-2 px-8 rounded-full hover:bg-gray-500">No</button>
-                  <button onClick={lockInAnswer} className="bg-green-600 text-white font-bold py-2 px-8 rounded-full hover:bg-green-500">Yes, Lock It In!</button>
+                  <button onClick={handleConfirmationNo} className="bg-gray-400 text-white font-bold py-2 px-8 rounded-full hover:bg-gray-500">No</button>
+                  <button onClick={lockInAnswer} className="bg-[#D40511] text-white font-bold py-2 px-8 rounded-full hover:opacity-90">Yes, Lock It In!</button>
                 </div>
               </div>
             </div>
@@ -205,15 +217,15 @@ const GameScreen: React.FC<GameScreenProps> = ({ playerName, onEndGame, playSoun
       </div>
 
       <div className="w-full lg:w-1/4 lg:h-[90vh] flex flex-col">
-        <div className="bg-black/20 p-2 rounded-t-lg text-center flex-shrink-0">
-            <p className="text-xl font-bold text-yellow-300 truncate">{playerName}</p>
+        <div className="bg-white/50 p-2 rounded-t-lg text-center flex-shrink-0">
+            <p className="text-xl font-bold text-[#D40511] truncate">{playerName}</p>
         </div>
         <div className="flex-grow min-h-0">
           <PrizeLadder currentLevel={currentQuestionIndex + 1} />
         </div>
          <button
             onClick={handleWalkAway}
-            className="w-full mt-4 bg-red-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-red-700 transition-colors duration-200 flex-shrink-0"
+            className="w-full mt-4 bg-[#D40511] text-white font-bold py-3 px-6 rounded-lg shadow-md hover:opacity-90 transition-opacity duration-200 flex-shrink-0"
           >
             Walk Away
         </button>

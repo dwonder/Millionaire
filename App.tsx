@@ -1,6 +1,5 @@
-
 import React, { useState, useCallback, useEffect } from 'react';
-import { GameState } from './types';
+import { GameState, Lifelines, SavedGameState } from './types';
 import StartScreen from './components/StartScreen';
 import GameScreen from './components/GameScreen';
 import EndScreen from './components/EndScreen';
@@ -24,6 +23,50 @@ const App: React.FC = () => {
   });
   const { playSound, stopSound, playMusic, stopMusic, setMuted } = useSound();
   const [userInteracted, setUserInteracted] = useState(false);
+
+  // Lifted state for game progress
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
+  const [lifelines, setLifelines] = useState<Lifelines>({ fiftyFifty: true, askAudience: true, phoneFriend: true });
+  const [savedGame, setSavedGame] = useState<SavedGameState | null>(null);
+
+  // Load game from localStorage on mount
+  useEffect(() => {
+    try {
+      const savedData = localStorage.getItem('cyberMillionaireSave');
+      if (savedData) {
+        setSavedGame(JSON.parse(savedData));
+      }
+    } catch (error) {
+      console.error("Failed to load game state:", error);
+      localStorage.removeItem('cyberMillionaireSave');
+    }
+  }, []);
+  
+  // Save game to localStorage when state changes during play
+  useEffect(() => {
+    if (gameState === GameState.Playing) {
+      try {
+        const dataToSave: SavedGameState = {
+          playerName,
+          currentQuestionIndex,
+          lifelines,
+        };
+        localStorage.setItem('cyberMillionaireSave', JSON.stringify(dataToSave));
+      } catch (error) {
+        console.error("Failed to save game state:", error);
+      }
+    } else {
+      // Clear save on start/end screen
+      localStorage.removeItem('cyberMillionaireSave');
+      if(gameState === GameState.Start) {
+        // Reload potential save if we return to start screen
+         const savedData = localStorage.getItem('cyberMillionaireSave');
+         if (savedData) setSavedGame(JSON.parse(savedData));
+         else setSavedGame(null);
+      }
+    }
+  }, [gameState, playerName, currentQuestionIndex, lifelines]);
+
 
   // Effect to persist mute state to local storage
   useEffect(() => {
@@ -85,24 +128,35 @@ const App: React.FC = () => {
 
   const startGame = useCallback((name: string) => {
     setPlayerName(name.trim());
+    setCurrentQuestionIndex(0);
+    setLifelines({ fiftyFifty: true, askAudience: true, phoneFriend: true });
+    setGameState(GameState.Playing);
+    setFinalScore('€0');
+    setIsWinner(false);
+  }, []);
+  
+  const resumeGame = useCallback((savedData: SavedGameState) => {
+    setPlayerName(savedData.playerName);
+    setCurrentQuestionIndex(savedData.currentQuestionIndex);
+    setLifelines(savedData.lifelines);
     setGameState(GameState.Playing);
     setFinalScore('€0');
     setIsWinner(false);
   }, []);
 
-  const endGame = useCallback((currentQuestionIndex: number, walkedAway: boolean = false) => {
+  const endGame = useCallback((questionIndex: number, walkedAway: boolean = false) => {
     let score = '€0';
     if (walkedAway) {
-      score = currentQuestionIndex > 0 ? PRIZE_LADDER[PRIZE_LADDER.length - currentQuestionIndex].prize : '€0';
+      score = questionIndex > 0 ? PRIZE_LADDER[PRIZE_LADDER.length - questionIndex].prize : '€0';
     } else {
-       if (currentQuestionIndex >= 10) {
+       if (questionIndex >= 10) {
         score = PRIZE_LADDER.find(p => p.level === 10)?.prize || '€32,000';
-      } else if (currentQuestionIndex >= 5) {
+      } else if (questionIndex >= 5) {
         score = PRIZE_LADDER.find(p => p.level === 5)?.prize || '€1,000';
       }
     }
    
-    const isWinning = currentQuestionIndex === 15;
+    const isWinning = questionIndex === 15;
     stopMusic();
     playSound(isWinning ? SoundType.Win : SoundType.Lose);
 
@@ -120,20 +174,24 @@ const App: React.FC = () => {
                   playSound={playSound} 
                   stopSound={stopSound} 
                   playMusic={playMusic}
+                  currentQuestionIndex={currentQuestionIndex}
+                  setCurrentQuestionIndex={setCurrentQuestionIndex}
+                  lifelines={lifelines}
+                  setLifelines={setLifelines}
                />;
       case GameState.End:
         return <EndScreen score={finalScore} onRestart={() => setGameState(GameState.Start)} isWinner={isWinner} playerName={playerName} />;
       case GameState.Start:
       default:
-        return <StartScreen onStart={startGame} />;
+        return <StartScreen onStart={startGame} onResume={resumeGame} savedGame={savedGame} />;
     }
   };
 
   return (
-    <div className="bg-gradient-to-b from-gray-900 to-indigo-900 min-h-screen text-white flex items-center justify-center p-4 font-sans">
+    <div className="bg-[#FFCC00] min-h-screen text-gray-800 flex items-center justify-center p-4 font-sans">
       <button
         onClick={() => setIsMuted(prev => !prev)}
-        className="fixed top-4 right-4 z-50 p-2 bg-black/30 rounded-full text-white hover:bg-black/50 transition-colors"
+        className="fixed top-4 right-4 z-50 p-2 bg-[#D40511] rounded-full text-white hover:opacity-80 transition-opacity"
         aria-label={isMuted ? "Unmute sound" : "Mute sound"}
       >
         {isMuted ? <VolumeOffIcon className="w-6 h-6" /> : <VolumeUpIcon className="w-6 h-6" />}
