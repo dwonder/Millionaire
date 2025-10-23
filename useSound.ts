@@ -16,7 +16,7 @@ export enum SoundType {
 }
 
 const soundMap: Record<SoundType, string> = {
-  [SoundType.Start]: 'https://archive.org/download/wwtbm-soundtrack/WWTBM%20Soundtrack/Opening%20Theme.mp3',
+  [SoundType.Start]: 'https://pixabay.com/music/main-title-genre-game-show-soundtrack-suspens-421116.mp3',
   [SoundType.Play]: 'https://archive.org/download/wwtbm-soundtrack/WWTBM%20Soundtrack/Easy%20Question%20Bed.mp3',
   [SoundType.Suspense]: 'https://archive.org/download/wwtbm-soundtrack/WWTBM%20Soundtrack/Medium%20Question%20Bed.mp3',
   [SoundType.Correct]: 'https://archive.org/download/wwtbm-soundtrack/WWTBM%20Soundtrack/Correct%20Answer.mp3',

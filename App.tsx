@@ -114,7 +114,7 @@ const App: React.FC = () => {
     switch(gameState) {
       case GameState.Start:
         stopMusic();
-        playMusic(SoundType.Start);
+        // playMusic(SoundType.Start); // Disabled to allow iframe audio to play
         break;
       case GameState.Playing:
         stopMusic();

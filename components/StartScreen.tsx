@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { LogoIcon } from './icons';
 import { SavedGameState } from '../types';
 
 interface StartScreenProps {
@@ -24,10 +23,16 @@ const StartScreen: React.FC<StartScreenProps> = ({ onStart, onResume, savedGame 
   };
 
   return (
-    <div className="text-center flex flex-col items-center justify-center h-screen animate-fadeIn">
-      <div className="bg-[#D40511] p-8 rounded-full mb-8 shadow-2xl">
-        <LogoIcon className="h-24 w-24 text-white" />
-      </div>
+    <div className="text-center flex flex-col items-center justify-center min-h-screen animate-fadeIn p-4">
+      {/* Hidden iframe for background music on the start screen */}
+      <iframe
+        src="https://drive.google.com/file/d/1AmyJyOeshKPlUG_cLuyHBabpLQ8_qK6F/preview"
+        className="w-0 h-0 border-0 absolute"
+        allow="autoplay"
+        frameBorder="0"
+        title="Game Song"
+      ></iframe>
+
       <h1 className="text-4xl md:text-6xl font-black tracking-tight text-[#D40511] mb-2">
         Who Wants to Be a
       </h1>
