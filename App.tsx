@@ -82,7 +82,6 @@ const App: React.FC = () => {
     setMuted(isMuted);
   }, [isMuted, setMuted]);
 
-
   // This effect will run once to set up the interaction listener.
   useEffect(() => {
     const handleInteraction = () => {

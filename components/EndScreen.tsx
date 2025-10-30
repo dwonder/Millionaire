@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 declare var confetti: any;
 declare var html2canvas: any;
@@ -11,6 +11,17 @@ interface EndScreenProps {
 }
 
 const EndScreen: React.FC<EndScreenProps> = ({ score, isWinner, onRestart, playerName }) => {
+  const [timestamp, setTimestamp] = useState(new Date());
+
+  useEffect(() => {
+    const timerId = setInterval(() => {
+      setTimestamp(new Date());
+    }, 1000);
+    return () => {
+      clearInterval(timerId);
+    };
+  }, []);
+
   useEffect(() => {
     if (isWinner && typeof confetti === 'function') {
       const duration = 5 * 1000;
@@ -80,7 +91,10 @@ const EndScreen: React.FC<EndScreenProps> = ({ score, isWinner, onRestart, playe
         </h1>
       )}
       <p className="text-xl text-gray-700 mb-4">You walk away with:</p>
-      <p className="text-6xl font-bold text-[#D40511] mb-12">{score}</p>
+      <div className="mb-12 text-center">
+        <p className="text-6xl font-bold text-[#D40511]">{score}</p>
+        <p className="text-xs text-gray-600 mt-2">{timestamp.toLocaleString()}</p>
+      </div>
       <div id="end-screen-buttons" className="flex flex-col sm:flex-row items-center justify-center gap-4">
         <button
           onClick={onRestart}
