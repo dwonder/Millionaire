@@ -1,113 +1,125 @@
 import { Question, Prize } from './types';
 
 export const QUESTIONS: Question[] = [
-  // Easy: Q1-5
+  // Q1 - Easy
   {
     id: 1,
-    question: 'You receive an urgent email that looks like it\'s from DHL IT, asking you to click a link to verify your login details immediately. What\'s the best next step?',
-    options: ['Click the link; it\'s from IT so it must be important.', 'Reply with your password so they can verify it for you.', 'Ignore it for now, it\'s probably not urgent.', 'Delete the email and report it to the IT helpdesk as potential phishing.'],
-    correctAnswer: 'Delete the email and report it to the IT helpdesk as potential phishing.',
-    explanation: 'This is a classic phishing tactic. Legitimate IT departments will never ask for your password via an email link. Always report suspicious emails.',
+    question: 'In a majority of successful cyberattacks, what is the weakest point that attackers exploit to gain entry?',
+    options: ['The company\'s firewall or network perimeter.', 'Weak server configurations.', 'Human error (e.g., clicking a bad link).', 'Lack of encryption on databases.'],
+    correctAnswer: 'Human error (e.g., clicking a bad link).',
+    explanation: 'Humans, not hardware, are the most common attack vector. Your awareness is the first line of defense.',
   },
+  // Q2 - Easy
   {
     id: 2,
-    question: 'Which of the following is the strongest password for your work account?',
-    options: ['Password123!', 'MyDogFluffy1998', 'CorrectHorseBatteryStaple', 'The name of the company you work for.'],
-    correctAnswer: 'CorrectHorseBatteryStaple',
-    explanation: 'The best passwords are long phrases (passphrases) that are easy for you to remember but hard for computers to guess. Using common words or personal info is risky.',
+    question: 'You receive an email from “IT Support” asking you to verify your password to prevent account suspension. What is the correct action?',
+    options: ['Click the link and follow the instructions.', 'Reply to the email to confirm if it’s a real request.', 'Report it using the official “Report Phish” button, then delete it.', 'Forward it to colleagues so they are also aware of the scam.'],
+    correctAnswer: 'Report it using the official “Report Phish” button, then delete it.',
+    explanation: 'Ignoring a phish helps you, but reporting it protects everyone. Security is a collective responsibility, not a silent one.',
   },
+  // Q3 - Easy
   {
     id: 3,
-    question: 'You find a mysterious USB stick labeled "TOP SECRET SALARY INFO" in the breakroom. What\'s the wisest move?',
-    options: ['Plug it into your computer to see whose it is. Curiosity is a virtue!', 'Ask your coworkers if it\'s theirs.', 'Take it straight to the IT/Security department without plugging it in.', 'Plug it into the shared printer to see what files are on it.'],
-    correctAnswer: 'Take it straight to the IT/Security department without plugging it in.',
-    explanation: 'Unknown USB drives are a common way for malware to spread. Never plug them into any company device. The security team has the tools to inspect them safely.',
+    question: 'A LinkedIn post from “GlobalTech Recruiters” says: “We’re hiring! Comment ‘Interested’ and we’ll DM you the application link.” What should you do?',
+    options: ['Comment “Interested” — it’s how recruiters track engagement.', 'Check the recruiter’s company profile for legitimacy before engaging.', 'DM them privately to get the link directly.', 'Share the post to help your friends find opportunities.'],
+    correctAnswer: 'Check the recruiter’s company profile for legitimacy before engaging.',
+    explanation: 'Even a simple comment can expose you to scam DMs. This tactic, known as engagement bait, is a modern form of phishing.',
   },
+  // Q4 - Easy
   {
     id: 4,
-    question: 'You\'re at a coffee shop using their free Wi-Fi. Which of these activities is the riskiest?',
-    options: ['Browsing the latest cat videos on YouTube.', 'Checking the weather forecast.', 'Logging into your corporate email or online banking.', 'Reading the news online.'],
-    correctAnswer: 'Logging into your corporate email or online banking.',
-    explanation: 'Public Wi-Fi is often not secure. Criminals can "listen in" on the connection. Avoid logging into sensitive accounts like work email or banking unless you\'re using a VPN.',
+    question: 'Your coworker is hospitalized. You post on Facebook: “Please pray for Funmi Ade, she’s recovering after surgery.” What is the primary issue here?',
+    options: ['It’s a kind gesture showing support for a colleague.', 'You are sharing sensitive personal health information without consent.', 'It’s fine, especially if other people have posted similar updates.', 'The colleague is unlikely to mind the public show of support.'],
+    correctAnswer: 'You are sharing sensitive personal health information without consent.',
+    explanation: 'Health data is sensitive personal data. While the intent is compassionate, posting it without consent is a privacy violation. Compassion ≠ compliance.',
   },
+  // Q5 - Easy (Safe Haven)
   {
     id: 5,
-    question: 'Your company requires you to use "Two-Factor Authentication" (2FA). What does that actually mean?',
-    options: ['You have to type your password twice.', 'It\'s a password and a second code, usually from your phone.', 'You need two friends to approve your login.', 'Your computer\'s firewall has double the power.'],
-    correctAnswer: 'It\'s a password and a second code, usually from your phone.',
-    explanation: '2FA is like having two locks on your door. Even if a thief steals your key (password), they still can\'t get in without the second key (the code from your phone).',
+    question: 'You want to celebrate your colleague’s birthday on LinkedIn with a picture of the team at work. What is the essential first step?',
+    options: ['Post it immediately to surprise them—it shows great company culture.', 'Ask for your colleague’s explicit consent before posting their photo online.', 'Tag the company’s official page for maximum visibility.', 'Blur the company logo in the background and then post it.'],
+    correctAnswer: 'Ask for your colleague’s explicit consent before posting their photo online.',
+    explanation: 'Consent isn’t optional. Even a friendly post constitutes “data processing,” and employees have the right to control their own image.',
   },
-  // Medium: Q6-10
+  // Q6 - Medium
   {
     id: 6,
-    question: 'You get a call from someone claiming to be from "Microsoft Support." They say your computer is sending error messages and need remote access to fix it. What\'s a major red flag?',
-    options: ['They have a friendly and helpful tone of voice.', 'They ask for your computer\'s model number.', 'They initiated the call and are creating a sense of urgency.', 'They offer you a discount on antivirus software.'],
-    correctAnswer: 'They initiated the call and are creating a sense of urgency.',
-    explanation: 'Unsolicited calls from tech support are almost always scams. They use fear and urgency to trick you into giving them control of your computer. Hang up and report it.',
+    question: 'A LinkedIn user claiming to be a recruiter from “TechHire Global” asks for your CV and most recent payslip. How should you respond?',
+    options: ['Send only your CV, as payslips are too confidential to share.', 'Verify the recruiter via the company’s official website or HR email before sending anything.', 'Reply with your details using your corporate email to appear more credible.', 'Accept their connection request first, and then decide later if you will send the documents.'],
+    correctAnswer: 'Verify the recruiter via the company’s official website or HR email before sending anything.',
+    explanation: 'Verification should always be the first step, not an afterthought. Scammers often request sensitive documents to commit fraud.',
   },
+  // Q7 - Medium
   {
     id: 7,
-    question: 'What\'s the main benefit of using a password manager?',
-    options: ['It lets you use the same easy password everywhere, but securely.', 'It helps you create and remember unique, super-strong passwords for every site.', 'It automatically fills in your username but makes you type the password.', 'It shares your passwords with the IT team so they can help you faster.'],
-    correctAnswer: 'It helps you create and remember unique, super-strong passwords for every site.',
-    explanation: 'A password manager is like a secure vault for all your different passwords. You only need to remember one master password to unlock it, and it handles the rest.',
+    question: 'You get a DM from an “influencer” saying: “We love your brand! Can we collaborate? Just fill this form so our agency can reach you.” The form asks for your corporate ID and email.',
+    options: ['Fill out the form, since collaborations are great for brand visibility.', 'Verify the request with Corporate Communications or Marketing before responding.', 'Share a link to your public LinkedIn profile instead of filling out the form.', 'Reply to the DM asking for more details on the proposed collaboration first.'],
+    correctAnswer: 'Verify the request with Corporate Communications or Marketing before responding.',
+    explanation: 'Always route potential brand engagements through official channels. Marketing and collaboration scams are a growing social engineering frontier.',
   },
+  // Q8 - Medium
   {
     id: 8,
-    question: 'Why is a "clean desk policy" important for cybersecurity?',
-    options: ['It makes the office look tidy for visitors.', 'It prevents sensitive documents with passwords or customer data from being left out.', 'It helps the cleaning staff work more efficiently.', 'It reduces paper clutter, which is good for the environment.'],
-    correctAnswer: 'It prevents sensitive documents with passwords or customer data from being left out.',
-    explanation: 'While a tidy desk is nice, the main security reason is to protect information. A sticky note with a password or a customer list left on a desk is an easy target for theft.',
+    question: 'A colleague from another department asks you for “a copy of customer data” for an analysis they are running. What is the correct protocol?',
+    options: ['Share it via email or internal chat since it’s an internal request.', 'Ask your manager or Data Protection Officer (DPO) to approve the request before sharing.', 'Compress the file and protect it with a password before sending.', 'Tell them which shared drive to find the data on themselves.'],
+    correctAnswer: 'Ask your manager or Data Protection Officer (DPO) to approve the request before sharing.',
+    explanation: 'An internal request does not automatically mean it is an authorized one. Data sharing must follow the principle of least privilege and requires documented approval.',
   },
+  // Q9 - Medium
   {
     id: 9,
-    question: 'A scary message pops up on your screen, locking all your files. It demands payment in Bitcoin to get them back. This is a classic case of...',
-    options: ['A "computer flu."', 'Ransomware.', 'A "helpful" cleanup tool.', 'A system update.'],
-    correctAnswer: 'Ransomware.',
-    explanation: 'This is a ransomware attack. If this happens, disconnect your computer from the network immediately and report it to IT. Never pay the ransom!',
+    question: 'Your company posts your photo celebrating an achievement. Later, you find fake social media profiles using your image. What should you do?',
+    options: ['Ignore it, since it’s just online engagement and will fade away.', 'Report the fake accounts and immediately alert Corporate Communications.', 'Comment “Thanks!” on all the posts to show you are aware.', 'Quietly block the fake profiles and hope they stop.'],
+    correctAnswer: 'Report the fake accounts and immediately alert Corporate Communications.',
+    explanation: 'Impersonation scams leverage stolen visibility. Always involve official channels to manage the company\'s brand and your personal reputation.',
   },
+  // Q10 - Medium (Safe Haven)
   {
     id: 10,
-    question: 'Under data privacy laws like GDPR, what does "data minimization" mean?',
-    options: ['The company will use a really, really small font for its privacy policy.', 'The company should only collect the absolute minimum data needed for a specific task.', 'The company promises to minimize the number of ads you see.', 'Your data will be stored on a mini-SD card.'],
-    correctAnswer: 'The company should only collect the absolute minimum data needed for a specific task.',
-    explanation: 'Data minimization is a key privacy principle. It means companies shouldn\'t be greedy with your data; they should only collect what\'s truly necessary.',
+    question: 'A farewell post on a public forum says: “Goodbye Sarah! After 5 amazing years in our Nairobi data center, she’s moving to Amazon Cloud!” What is the main privacy concern?',
+    options: ['You revealed her work history, specific location, and new employer without her consent.', 'There is no concern, as it’s a positive farewell message.', 'It’s fine as long as Sarah herself liked or commented on the post.', 'The new company won’t mind the free publicity.'],
+    correctAnswer: 'You revealed her work history, specific location, and new employer without her consent.',
+    explanation: 'This post aggregates sensitive personal and professional data, which can be exploited by social engineers. Always get consent before sharing such details.',
   },
-  // Hard: Q11-15
+  // Q11 - Hard
   {
     id: 11,
-    question: 'What is considered an "insider threat"?',
-    options: ['A spy from a rival company trying to hack the network.', 'An employee who accidentally clicks on a phishing link.', 'A disgruntled former employee who still has access to systems.', 'Both B and C are examples of insider threats.'],
-    correctAnswer: 'Both B and C are examples of insider threats.',
-    explanation: 'An insider threat isn\'t always malicious. It can be an employee making an honest mistake (unintentional) or a former/current employee acting with bad intent (malicious).',
+    question: 'Your manager says, "Give your password to Alice. She needs to review a spreadsheet on your account, and we don\'t have time for IT." What is the primary security risk here?',
+    options: ['Alice might secretly change the spreadsheet to give herself a raise.', 'The budget information might be exposed to the rest of the company.', 'Alice could accidentally lock you out of your account by mistyping the password.', 'Sharing the password destroys the audit trail (non-repudiation), making it impossible to prove who made changes.'],
+    correctAnswer: 'Sharing the password destroys the audit trail (non-repudiation), making it impossible to prove who made changes.',
+    explanation: 'Sharing credentials breaks accountability. If an action is taken using your account, it is attributed to you, creating a major compliance and security risk.',
   },
+  // Q12 - Hard
   {
     id: 12,
-    question: 'You\'re logging into your laptop at a busy airport gate. What is "shoulder surfing"?',
-    options: ['A cool new dance move popular with frequent flyers.', 'When someone sneakily watches over your shoulder to see you type your password.', 'A technique for getting the best view from the airplane window.', 'When you lean on a fellow passenger\'s shoulder because you\'re tired.'],
-    correctAnswer: 'When someone sneakily watches over your shoulder to see you type your password.',
-    explanation: 'Be aware of your surroundings! Shoulder surfing is a low-tech way to steal credentials. Use a privacy screen or shield your keyboard when in public.',
+    question: 'Your manager insists they need a list of their team\'s salaries on a personal device to work from home. What is the correct response?',
+    options: ['Ask them to get formal, written approval from both HR and Finance first.', 'Send a password-protected file to their personal email.', 'Decline the request, stating it violates company policy.', 'Email the data to their corporate account so they can transfer it themselves.'],
+    correctAnswer: 'Ask them to get formal, written approval from both HR and Finance first.',
+    explanation: 'Transferring sensitive data like salaries to personal devices creates significant risk. Such an exception requires formal, documented approval from the relevant governance bodies.',
   },
+  // Q13 - Hard
   {
     id: 13,
-    question: 'You realize you\'ve just clicked a bad link and might have installed malware. What is the absolute FIRST thing you should do?',
-    options: ['Immediately turn off your computer to stop it.', 'Disconnect from the internet (unplug cable or turn off Wi-Fi).', 'Run a virus scan yourself to see if you can fix it.', 'Keep working and hope it goes away on its own.'],
-    correctAnswer: 'Disconnect from the internet (unplug cable or turn off Wi-Fi).',
-    explanation: 'Disconnecting from the network is the top priority. This contains the threat and prevents it from spreading or sending data out. Then, report it to IT immediately.',
+    question: 'A document contains the personal contact details (home address, phone number) for all senior executives. How should this data be classified?',
+    options: ['Internal, because all employees should have access to leadership\'s contact info.', 'Confidential, but you can share it if the person asking is also a senior manager.', 'Restricted/Secret, as it contains highly sensitive PII that requires strict need-to-know access.', 'Public, as long as the document is password-protected.'],
+    correctAnswer: 'Restricted/Secret, as it contains highly sensitive PII that requires strict need-to-know access.',
+    explanation: 'This is highly sensitive Personally Identifiable Information (PII). Its exposure could lead to direct threats against leadership, so access must be strictly controlled and audited.',
   },
+  // Q14 - Hard
   {
     id: 14,
-    question: 'You get an email from someone who looks like your CEO. It\'s marked "URGENT" and asks you to immediately wire money to a new vendor. What should you do?',
-    options: ['Process the wire transfer immediately; you don\'t want to keep the CEO waiting.', 'Reply to the email to ask for confirmation.', 'Forward the request to your manager for approval.', 'Verify the request through a different channel, like a phone call.'],
-    correctAnswer: 'Verify the request through a different channel, like a phone call.',
-    explanation: 'This is a scam called "CEO Fraud." Scammers impersonate executives to create pressure. Always verify unusual financial requests using a different communication method.',
+    question: 'An email that appears to be from your CEO, sent from their phone, says: "I\'m in a meeting, can you urgently process a wire transfer to this new vendor?" What is the most critical next step?',
+    options: ['Process the payment, as the request is from the CEO and is marked urgent.', 'Reply to the email to confirm the amount and vendor details before processing.', 'Forward the email to the finance department and let them handle the request.', 'Verify the request through a different channel, like a phone call or instant message to the CEO.'],
+    correctAnswer: 'Verify the request through a different channel, like a phone call or instant message to the CEO.',
+    explanation: 'This is a classic CEO Fraud tactic. Scammers spoof emails and create false urgency. Replying may go back to the attacker. Always verify unusual financial requests out-of-band.',
   },
+  // Q15 - Millionaire Question
   {
     id: 15,
-    question: 'In the digital world, "non-repudiation" is a fancy term that ensures what?',
-    options: ['You can\'t be fired for a security mistake.', 'A website\'s privacy policy is easy to read.', 'Someone can\'t deny having sent a message or made a transaction.', 'Your computer will never refuse to boot up.'],
-    correctAnswer: 'Someone can\'t deny having sent a message or made a transaction.',
-    explanation: 'Think of it like a certified signature. Digital signatures provide non-repudiation, creating an undeniable link between a person and an action, crucial for digital trust.',
+    question: 'You realize you have just clicked on a suspicious link in an email and may have downloaded malware. What is the absolute FIRST thing you should do?',
+    options: ['Immediately shut down your computer to stop any malicious processes.', 'Run a full antivirus scan to find and remove the malware.', 'Disconnect your computer from the network (unplug ethernet or turn off Wi-Fi).', 'Delete the email from your inbox and then empty the trash folder.'],
+    correctAnswer: 'Disconnect your computer from the network (unplug ethernet or turn off Wi-Fi).',
+    explanation: 'Disconnecting from the network is the top priority. It contains the threat, preventing it from spreading to other computers or sending company data out to the attacker. After disconnecting, report it to IT immediately.',
   },
 ];
 
