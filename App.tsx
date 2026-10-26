@@ -26,7 +26,12 @@ const App: React.FC = () => {
 
   // Lifted state for game progress
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
-  const [lifelines, setLifelines] = useState<Lifelines>({ fiftyFifty: true, askAudience: true, phoneFriend: true });
+  const [lifelines, setLifelines] = useState<Lifelines>({
+    fiftyFifty: true,
+    askAudience: true,
+    phoneFriend: true,
+    safetyClue: true,
+  });
   const [savedGame, setSavedGame] = useState<SavedGameState | null>(null);
 
   // Load game from localStorage on mount
@@ -125,13 +130,16 @@ const App: React.FC = () => {
     }
   }, [gameState, playMusic, stopMusic, userInteracted]);
 
+  const [finalLevel, setFinalLevel] = useState<number>(0);
+
   const startGame = useCallback((name: string) => {
     setPlayerName(name.trim());
     setCurrentQuestionIndex(0);
-    setLifelines({ fiftyFifty: true, askAudience: true, phoneFriend: true });
+    setLifelines({ fiftyFifty: true, askAudience: true, phoneFriend: true, safetyClue: true });
     setGameState(GameState.Playing);
     setFinalScore('€0');
     setIsWinner(false);
+    setFinalLevel(0);
   }, []);
   
   const resumeGame = useCallback((savedData: SavedGameState) => {
@@ -141,6 +149,7 @@ const App: React.FC = () => {
     setGameState(GameState.Playing);
     setFinalScore('€0');
     setIsWinner(false);
+    setFinalLevel(savedData.currentQuestionIndex);
   }, []);
 
   const endGame = useCallback((questionIndex: number, walkedAway: boolean = false) => {
@@ -164,6 +173,7 @@ const App: React.FC = () => {
 
     setFinalScore(score);
     setIsWinner(isWinning);
+    setFinalLevel(questionIndex);
     setGameState(GameState.End);
   }, [playSound, stopMusic]);
 
@@ -182,10 +192,21 @@ const App: React.FC = () => {
                   setLifelines={setLifelines}
                />;
       case GameState.End:
-        return <EndScreen score={finalScore} onRestart={() => setGameState(GameState.Start)} isWinner={isWinner} playerName={playerName} />;
+        return <EndScreen 
+                  score={finalScore} 
+                  onRestart={() => setGameState(GameState.Start)} 
+                  isWinner={isWinner} 
+                  playerName={playerName}
+                  questionLevel={finalLevel}
+               />;
       case GameState.Start:
       default:
-        return <StartScreen onStart={startGame} onResume={resumeGame} savedGame={savedGame} />;
+        return <StartScreen 
+                  onStart={startGame} 
+                  onResume={resumeGame} 
+                  savedGame={savedGame}
+                  recentPlayerName={playerName}
+               />;
     }
   };
 

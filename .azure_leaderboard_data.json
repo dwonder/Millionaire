@@ -1,0 +1,122 @@
+[
+  {
+    "partitionKey": "Leaderboard",
+    "rowKey": "seed_01",
+    "playerName": "Sarah Connor",
+    "score": "€1,000,000",
+    "scoreValue": 1000000,
+    "questionLevel": 15,
+    "isWinner": true,
+    "date": "2026-10-26T04:19:25.706Z",
+    "title": "Cybersecurity Millionaire",
+    "attempts": 4
+  },
+  {
+    "partitionKey": "Leaderboard",
+    "rowKey": "seed_02",
+    "playerName": "Alex Mercer",
+    "score": "€500,000",
+    "scoreValue": 500000,
+    "questionLevel": 14,
+    "isWinner": false,
+    "date": "2026-10-25T20:19:25.707Z",
+    "title": "Security Architect",
+    "attempts": 6
+  },
+  {
+    "partitionKey": "Leaderboard",
+    "rowKey": "seed_03",
+    "playerName": "Elena Rostova",
+    "score": "€250,000",
+    "scoreValue": 250000,
+    "questionLevel": 13,
+    "isWinner": false,
+    "date": "2026-10-25T08:19:25.707Z",
+    "title": "Security Champion",
+    "attempts": 3
+  },
+  {
+    "partitionKey": "Leaderboard",
+    "rowKey": "seed_04",
+    "playerName": "Marcus Vance",
+    "score": "€125,000",
+    "scoreValue": 125000,
+    "questionLevel": 12,
+    "isWinner": false,
+    "date": "2026-10-24T20:19:25.707Z",
+    "title": "Zero Trust Specialist",
+    "attempts": 8
+  },
+  {
+    "partitionKey": "Leaderboard",
+    "rowKey": "seed_05",
+    "playerName": "David Chen",
+    "score": "€64,000",
+    "scoreValue": 64000,
+    "questionLevel": 11,
+    "isWinner": false,
+    "date": "2026-10-24T08:19:25.707Z",
+    "title": "SOC Lead Defender",
+    "attempts": 5
+  },
+  {
+    "partitionKey": "Leaderboard",
+    "rowKey": "seed_06",
+    "playerName": "Priya Patel",
+    "score": "€32,000",
+    "scoreValue": 32000,
+    "questionLevel": 10,
+    "isWinner": false,
+    "date": "2026-10-23T20:19:25.707Z",
+    "title": "Data Defender",
+    "attempts": 2
+  },
+  {
+    "partitionKey": "Leaderboard",
+    "rowKey": "seed_07",
+    "playerName": "Jordan Taylor",
+    "score": "€16,000",
+    "scoreValue": 16000,
+    "questionLevel": 9,
+    "isWinner": false,
+    "date": "2026-10-23T08:19:25.707Z",
+    "title": "Incident Responder",
+    "attempts": 7
+  },
+  {
+    "partitionKey": "Leaderboard",
+    "rowKey": "seed_08",
+    "playerName": "Samira Khan",
+    "score": "€8,000",
+    "scoreValue": 8000,
+    "questionLevel": 8,
+    "isWinner": false,
+    "date": "2026-10-22T20:19:25.707Z",
+    "title": "IAM Specialist",
+    "attempts": 4
+  },
+  {
+    "partitionKey": "Leaderboard",
+    "rowKey": "seed_09",
+    "playerName": "Liam O'Connor",
+    "score": "€4,000",
+    "scoreValue": 4000,
+    "questionLevel": 7,
+    "isWinner": false,
+    "date": "2026-10-22T08:19:25.707Z",
+    "title": "Network Guard",
+    "attempts": 3
+  },
+  {
+    "partitionKey": "Leaderboard",
+    "rowKey": "seed_10",
+    "playerName": "Chloe Bennett",
+    "score": "€2,000",
+    "scoreValue": 2000,
+    "questionLevel": 6,
+    "isWinner": false,
+    "date": "2026-10-21T20:19:25.707Z",
+    "title": "Phish Fighter",
+    "attempts": 1
+  }
+]

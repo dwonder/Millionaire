@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { QUESTIONS } from '../constants';
+import { QUESTIONS, PRIZE_LADDER } from '../constants';
 import { Question, Lifelines, LifelineType, AnswerState } from '../types';
 import PrizeLadder from './PrizeLadder';
 import LifelinesDisplay from './Lifelines';
@@ -7,8 +7,12 @@ import QuestionBox from './QuestionBox';
 import AnswerOption from './AnswerOption';
 import AudiencePollModal from './AudiencePollModal';
 import PhoneFriendModal from './PhoneFriendModal';
+import ClueModal from './ClueModal';
+import RulesModal from './RulesModal';
 import Timer from './Timer';
 import { SoundType } from '../useSound';
+import { VaultIcon, RulesIcon } from './icons';
+import { getPlayerCareerStats } from '../leaderboardClient';
 
 interface GameScreenProps {
   playerName: string;
@@ -24,16 +28,16 @@ interface GameScreenProps {
 
 const TOTAL_TIME = 60;
 
-const GameScreen: React.FC<GameScreenProps> = ({ 
-  playerName, 
-  onEndGame, 
-  playSound, 
-  stopSound, 
-  playMusic, 
+export const GameScreen: React.FC<GameScreenProps> = ({
+  playerName,
+  onEndGame,
+  playSound,
+  stopSound,
+  playMusic,
   currentQuestionIndex,
   setCurrentQuestionIndex,
   lifelines,
-  setLifelines
+  setLifelines,
 }) => {
   const [question, setQuestion] = useState<Question>(QUESTIONS[currentQuestionIndex]);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
@@ -41,8 +45,26 @@ const GameScreen: React.FC<GameScreenProps> = ({
   const [disabledAnswers, setDisabledAnswers] = useState<string[]>([]);
   const [showAudiencePoll, setShowAudiencePoll] = useState(false);
   const [showPhoneFriend, setShowPhoneFriend] = useState(false);
+  const [showClue, setShowClue] = useState(false);
+  const [showRules, setShowRules] = useState(false);
   const [isConfirming, setIsConfirming] = useState(false);
   const [timeLeft, setTimeLeft] = useState(TOTAL_TIME);
+
+  const careerStats = getPlayerCareerStats(playerName);
+  const currentLevel = currentQuestionIndex + 1;
+  const currentStake =
+    PRIZE_LADDER[PRIZE_LADDER.length - currentLevel]?.prize || '€100';
+
+  const getGuaranteedBank = () => {
+    if (currentLevel > 10) return '€32,000';
+    if (currentLevel > 5) return '€1,000';
+    return '€0';
+  };
+
+  const getWalkAwayAmount = () => {
+    if (currentQuestionIndex === 0) return '€0';
+    return PRIZE_LADDER[PRIZE_LADDER.length - currentQuestionIndex]?.prize || '€0';
+  };
 
   useEffect(() => {
     setQuestion(QUESTIONS[currentQuestionIndex]);
@@ -51,13 +73,12 @@ const GameScreen: React.FC<GameScreenProps> = ({
     setDisabledAnswers([]);
     setIsConfirming(false);
     setTimeLeft(TOTAL_TIME);
-    
+
     if (currentQuestionIndex >= 9) {
       playMusic(SoundType.Suspense);
     } else {
       playMusic(SoundType.Play);
     }
-
   }, [currentQuestionIndex, playMusic]);
 
   useEffect(() => {
@@ -67,19 +88,19 @@ const GameScreen: React.FC<GameScreenProps> = ({
     }
 
     const tickAudio = playSound(SoundType.Tick, true);
-    if(tickAudio) tickAudio.playbackRate = 1.0;
+    if (tickAudio) tickAudio.playbackRate = 1.0;
 
     const intervalId = setInterval(() => {
-      setTimeLeft(prevTime => {
+      setTimeLeft((prevTime) => {
         if (prevTime <= 1) {
           clearInterval(intervalId);
           stopSound(SoundType.Tick);
-          playSound(SoundType.Wrong); // Time's up
+          playSound(SoundType.Wrong);
           onEndGame(currentQuestionIndex);
           return 0;
         }
-        if (prevTime <= 21) {
-          if (tickAudio) tickAudio.playbackRate = 1.5;
+        if (prevTime <= 21 && tickAudio) {
+          tickAudio.playbackRate = 1.5;
         }
         return prevTime - 1;
       });
@@ -91,13 +112,12 @@ const GameScreen: React.FC<GameScreenProps> = ({
     };
   }, [answerState, isConfirming, currentQuestionIndex, onEndGame, playSound, stopSound]);
 
-
   const handleAnswerSelect = (answer: string) => {
     if (answerState === AnswerState.Default) {
       setSelectedAnswer(answer);
       setAnswerState(AnswerState.Selected);
       playSound(SoundType.FinalAnswer, true);
-      setTimeout(() => setIsConfirming(true), 500);
+      setTimeout(() => setIsConfirming(true), 400);
     }
   };
 
@@ -114,55 +134,63 @@ const GameScreen: React.FC<GameScreenProps> = ({
     setTimeout(() => {
       if (isCorrect) {
         if (currentQuestionIndex < QUESTIONS.length - 1) {
-          setCurrentQuestionIndex(prev => prev + 1);
+          setCurrentQuestionIndex((prev) => prev + 1);
         } else {
           onEndGame(15);
         }
       } else {
         onEndGame(currentQuestionIndex);
       }
-    }, 3000);
+    }, 2800);
   };
 
-  const useLifeline = useCallback((type: LifelineType) => {
-    if (!lifelines[type]) return;
-    
-    switch(type) {
-      case LifelineType.FiftyFifty:
-        playSound(SoundType.FiftyFifty);
-        break;
-      case LifelineType.AskAudience:
-        playSound(SoundType.AskAudience);
-        break;
-      case LifelineType.PhoneFriend:
-        playSound(SoundType.PhoneFriend);
-        break;
-    }
-    
-    setLifelines(prev => ({ ...prev, [type]: false }));
+  const useLifeline = useCallback(
+    (type: LifelineType) => {
+      if (!lifelines[type]) return;
 
-    if (type === LifelineType.FiftyFifty) {
-      const wrongAnswers = question.options.filter(opt => opt !== question.correctAnswer);
-      const randomWrongAnswer = wrongAnswers[Math.floor(Math.random() * wrongAnswers.length)];
-      const answersToDisable = wrongAnswers.filter(opt => opt !== randomWrongAnswer);
-      setDisabledAnswers(answersToDisable);
-    } else if (type === LifelineType.AskAudience) {
-      setShowAudiencePoll(true);
-    } else if (type === LifelineType.PhoneFriend) {
-      setShowPhoneFriend(true);
-    }
-  }, [lifelines, question, playSound, setLifelines]);
+      switch (type) {
+        case LifelineType.FiftyFifty:
+          playSound(SoundType.FiftyFifty);
+          break;
+        case LifelineType.AskAudience:
+          playSound(SoundType.AskAudience);
+          break;
+        case LifelineType.PhoneFriend:
+          playSound(SoundType.PhoneFriend);
+          break;
+        case LifelineType.SafetyClue:
+          playSound(SoundType.FiftyFifty);
+          break;
+      }
+
+      setLifelines((prev) => ({ ...prev, [type]: false }));
+
+      if (type === LifelineType.FiftyFifty) {
+        const wrongAnswers = question.options.filter((opt) => opt !== question.correctAnswer);
+        const randomWrongAnswer = wrongAnswers[Math.floor(Math.random() * wrongAnswers.length)];
+        const answersToDisable = wrongAnswers.filter((opt) => opt !== randomWrongAnswer);
+        setDisabledAnswers(answersToDisable);
+      } else if (type === LifelineType.AskAudience) {
+        setShowAudiencePoll(true);
+      } else if (type === LifelineType.PhoneFriend) {
+        setShowPhoneFriend(true);
+      } else if (type === LifelineType.SafetyClue) {
+        setShowClue(true);
+      }
+    },
+    [lifelines, question, playSound, setLifelines]
+  );
 
   const handleWalkAway = () => {
     onEndGame(currentQuestionIndex, true);
   };
-  
+
   const handleConfirmationNo = () => {
     stopSound(SoundType.FinalAnswer);
-    setIsConfirming(false); 
-    setSelectedAnswer(null); 
+    setIsConfirming(false);
+    setSelectedAnswer(null);
     setAnswerState(AnswerState.Default);
-  }
+  };
 
   const getAnswerState = (option: string): AnswerState => {
     if (answerState !== AnswerState.Default && answerState !== AnswerState.Selected) {
@@ -173,63 +201,216 @@ const GameScreen: React.FC<GameScreenProps> = ({
     if (option === selectedAnswer) return AnswerState.Selected;
     return AnswerState.Default;
   };
-  
+
   const optionsMap = ['A', 'B', 'C', 'D'];
 
   return (
-    <div className="flex flex-col lg:flex-row gap-8 min-h-screen items-center">
-      {showAudiencePoll && <AudiencePollModal question={question} onClose={() => setShowAudiencePoll(false)} />}
-      {showPhoneFriend && <PhoneFriendModal question={question} onClose={() => setShowPhoneFriend(false)} />}
+    <div className="w-full max-w-7xl mx-auto flex flex-col gap-4 py-2 px-2 sm:px-4 text-white font-sans">
+      {/* Modals */}
+      {showAudiencePoll && (
+        <AudiencePollModal question={question} onClose={() => setShowAudiencePoll(false)} />
+      )}
+      {showPhoneFriend && (
+        <PhoneFriendModal question={question} onClose={() => setShowPhoneFriend(false)} />
+      )}
+      {showClue && (
+        <ClueModal
+          clue={question.clue || question.explanation}
+          category={question.category}
+          onClose={() => setShowClue(false)}
+        />
+      )}
+      {showRules && <RulesModal onClose={() => setShowRules(false)} />}
 
-      <div className="w-full lg:w-3/4 flex flex-col justify-between h-full p-4">
-        <div>
-          <LifelinesDisplay lifelines={lifelines} onUseLifeline={useLifeline} />
-        </div>
-        <div className="flex-grow flex flex-col justify-center items-center my-2">
-            <Timer timeLeft={timeLeft} totalTime={TOTAL_TIME} />
-            <div className="w-full mt-4">
-              <QuestionBox questionText={question.question} questionNumber={currentQuestionIndex + 1} />
+      {/* Top Cockpit Header Bar with lighter slate grey background */}
+      <header className="bg-[#454F63] border-2 border-slate-400/60 rounded-2xl p-3 sm:p-4 shadow-xl flex flex-wrap items-center justify-between gap-3">
+        {/* Brand */}
+        <div className="flex items-center gap-3">
+          <div className="w-11 h-11 rounded-2xl bg-[#D40511] flex items-center justify-center font-black text-[#FFCC00] shadow-md border-2 border-[#FFCC00]">
+            🛡️
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="font-black text-sm sm:text-base tracking-tight text-white">
+                Cyber Millionaire
+              </span>
+              <span className="text-[10px] uppercase font-black px-2 py-0.5 rounded bg-[#D40511] text-white border border-[#FFCC00]/40">
+                Safety Edition
+              </span>
             </div>
+            <p className="text-xs text-slate-200 font-semibold">Chief Security Officer Challenge</p>
+          </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {question.options.map((option, index) => (
-            <AnswerOption
-              key={option}
-              optionText={option}
-              optionLabel={optionsMap[index]}
-              state={getAnswerState(option)}
-              onClick={() => handleAnswerSelect(option)}
-            />
-          ))}
+
+        {/* Center Vault & Stake Badges */}
+        <div className="flex items-center gap-2 sm:gap-4 mx-auto sm:mx-0">
+          <div className="bg-[#525D73] px-3.5 py-1.5 rounded-xl border border-slate-400/70 text-center shadow-sm">
+            <div className="text-[10px] font-bold uppercase tracking-wider text-slate-200">
+              Guaranteed Safe Vault
+            </div>
+            <div className="font-mono font-black text-base sm:text-lg text-[#FFCC00]">
+              {getGuaranteedBank()}
+            </div>
+          </div>
+
+          <div className="bg-[#525D73] px-3.5 py-1.5 rounded-xl border border-slate-400/70 text-center shadow-sm">
+            <div className="text-[10px] font-bold uppercase tracking-wider text-slate-200">
+              Current Question Stake
+            </div>
+            <div className="font-mono font-black text-base sm:text-lg text-white">
+              {currentStake}
+            </div>
+          </div>
         </div>
-         {isConfirming && (
-            <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-              <div className="bg-white p-8 rounded-lg shadow-2xl text-center">
-                <h2 className="text-3xl text-gray-800 font-bold mb-4">Is that your final answer?</h2>
-                <p className="text-[#D40511] text-2xl mb-6">{selectedAnswer}</p>
-                <div className="flex justify-center gap-4">
-                  <button onClick={handleConfirmationNo} className="bg-gray-400 text-white font-bold py-2 px-8 rounded-full hover:bg-gray-500">No</button>
-                  <button onClick={lockInAnswer} className="bg-[#D40511] text-white font-bold py-2 px-8 rounded-full hover:opacity-90">Yes, Lock It In!</button>
+
+        {/* Right Action Chips */}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setShowRules(true)}
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#525D73] hover:bg-[#5E6B83] text-white text-xs font-bold border border-slate-400/70 transition-colors shadow-sm"
+          >
+            <RulesIcon className="w-4 h-4 text-[#FFCC00]" />
+            <span>Rules</span>
+          </button>
+
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#525D73] border border-slate-400/70 shadow-sm">
+            <div className="w-6 h-6 rounded-full bg-[#D40511] text-white flex items-center justify-center text-xs font-black">
+              {playerName ? playerName.charAt(0).toUpperCase() : 'U'}
+            </div>
+            <div className="text-left">
+              <span className="font-black text-xs text-white block max-w-[100px] truncate leading-tight">
+                {playerName || 'Agent'}
+              </span>
+              <span className="text-[10px] text-[#FFCC00] font-bold block leading-tight font-mono">
+                Run #{careerStats.attempts + 1}
+              </span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Grid: Left Game Arena (3/4) & Right Safety Ladder (1/4) */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 items-stretch">
+        {/* Left Arena */}
+        <div className="lg:col-span-3 flex flex-col gap-4">
+          {/* Host Cyber Advice Banner with lighter slate grey background */}
+          <div className="bg-[#454F63] border-2 border-slate-400/60 rounded-2xl p-4 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div className="flex items-start gap-3 flex-1">
+              <div className="w-11 h-11 rounded-xl bg-[#525D73] border-2 border-slate-400/70 flex items-center justify-center shrink-0 text-xl shadow">
+                👨‍💼
+              </div>
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-black uppercase tracking-wider text-white">
+                    CSO's Host Advice
+                  </span>
+                  {question.category && (
+                    <span className="text-[10px] font-black px-2 py-0.5 rounded bg-[#D40511] text-white border border-[#FFCC00]/40">
+                      {question.category}
+                    </span>
+                  )}
                 </div>
+                <p className="text-sm font-semibold text-white leading-relaxed">
+                  "{question.hostAdvice || 'Read all four choices thoroughly before locking in your answer.'}"
+                </p>
               </div>
             </div>
-          )}
+
+            {/* Embedded Digital Countdown Timer */}
+            <div className="shrink-0 self-end sm:self-center">
+              <Timer timeLeft={timeLeft} totalTime={TOTAL_TIME} compact={true} />
+            </div>
+          </div>
+
+          {/* Lifelines Bar */}
+          <LifelinesDisplay lifelines={lifelines} onUseLifeline={useLifeline} />
+
+          {/* Question Box */}
+          <QuestionBox
+            questionNumber={currentQuestionIndex + 1}
+            questionText={question.question}
+            stake={currentStake}
+            category={question.category}
+          />
+
+          {/* 4 Answer Options */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+            {question.options.map((option, index) => (
+              <AnswerOption
+                key={option}
+                optionText={option}
+                optionLabel={optionsMap[index]}
+                state={getAnswerState(option)}
+                onClick={() => handleAnswerSelect(option)}
+              />
+            ))}
+          </div>
+
+          {/* Action Bar (Walk Away & Status) */}
+          <div className="bg-[#454F63] border-2 border-slate-400/60 rounded-2xl p-3.5 sm:p-4 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg">
+            <button
+              onClick={handleWalkAway}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#525D73] hover:bg-[#5E6B83] text-white font-extrabold text-sm border-2 border-slate-400/70 transition-colors shadow"
+            >
+              <VaultIcon className="w-4 h-4 text-[#FFCC00]" />
+              <span>Walk Away & Bank ({getWalkAwayAmount()})</span>
+            </button>
+
+            <div className="w-full sm:w-auto text-xs sm:text-sm font-bold text-center sm:text-right">
+              {selectedAnswer ? (
+                <span className="text-[#FFCC00]">Selection Locked: Confirm to submit</span>
+              ) : (
+                <span className="text-slate-200">Select an answer choice above to proceed</span>
+              )}
+            </div>
+          </div>
+
+          {/* Microlearning Takeaway Banner */}
+          <div className="bg-[#454F63] border-2 border-slate-400/60 rounded-2xl p-4 flex items-start gap-3 text-xs sm:text-sm text-slate-100">
+            <span className="text-lg text-[#FFCC00] shrink-0">💡</span>
+            <p className="leading-relaxed">
+              <strong className="text-white font-bold">Security Golden Rule:</strong> In everyday digital life, <strong className="text-[#FFCC00] font-black">pausing and verifying</strong> is your greatest superpower. Attackers rely on manufactured urgency to make you click without thinking!
+            </p>
+          </div>
+        </div>
+
+        {/* Right Sidebar: Safety Ladder */}
+        <div className="lg:col-span-1 h-full min-h-[500px]">
+          <PrizeLadder currentLevel={currentLevel} />
+        </div>
       </div>
 
-      <div className="w-full lg:w-1/4 lg:h-[90vh] flex flex-col">
-        <div className="bg-white/50 p-2 rounded-t-lg text-center flex-shrink-0">
-            <p className="text-xl font-bold text-[#D40511] truncate">{playerName}</p>
+      {/* Confirmation Modal */}
+      {isConfirming && (
+        <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn">
+          <div className="bg-[#454F63] border-2 border-[#FFCC00] text-white p-6 sm:p-8 rounded-3xl shadow-2xl text-center max-w-md w-full">
+            <div className="w-14 h-14 rounded-2xl bg-[#D40511] flex items-center justify-center mx-auto mb-3 text-2xl shadow-lg border-2 border-[#FFCC00]">
+              🎯
+            </div>
+            <h2 className="text-2xl font-black mb-2 text-white">Is that your final answer?</h2>
+            <div className="bg-[#525D73] p-4 rounded-xl border border-slate-400/70 my-4 text-sm font-bold text-[#FFCC00]">
+              "{selectedAnswer}"
+            </div>
+            <p className="text-xs text-slate-200 mb-6 font-semibold">
+              A correct choice advances you toward the €1,000,000 grand prize.
+            </p>
+            <div className="flex justify-center gap-3">
+              <button
+                onClick={handleConfirmationNo}
+                className="flex-1 bg-[#525D73] hover:bg-[#5E6B83] text-white font-bold py-3 px-5 rounded-full text-sm transition-colors border border-slate-400"
+              >
+                Change Mind
+              </button>
+              <button
+                onClick={lockInAnswer}
+                className="flex-1 bg-[#D40511] hover:bg-[#b0040e] text-white font-black py-3 px-5 rounded-full text-sm transition-all shadow-lg border border-[#FFCC00]/50"
+              >
+                Yes, Lock It In!
+              </button>
+            </div>
+          </div>
         </div>
-        <div className="flex-grow min-h-0">
-          <PrizeLadder currentLevel={currentQuestionIndex + 1} />
-        </div>
-         <button
-            onClick={handleWalkAway}
-            className="w-full mt-4 bg-[#D40511] text-white font-bold py-3 px-6 rounded-lg shadow-md hover:opacity-90 transition-opacity duration-200 flex-shrink-0"
-          >
-            Walk Away
-        </button>
-      </div>
+      )}
     </div>
   );
 };

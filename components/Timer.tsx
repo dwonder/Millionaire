@@ -3,48 +3,71 @@ import React from 'react';
 interface TimerProps {
   timeLeft: number;
   totalTime: number;
+  compact?: boolean;
 }
 
-const Timer: React.FC<TimerProps> = ({ timeLeft, totalTime }) => {
-  const radius = 50;
+export const Timer: React.FC<TimerProps> = ({ timeLeft, totalTime, compact = false }) => {
+  const isUrgent = timeLeft <= 15;
+  const isWarning = timeLeft <= 30;
+
+  if (compact) {
+    return (
+      <div
+        className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all ${
+          isUrgent
+            ? 'bg-red-950/80 border-red-500 text-red-300 animate-pulse ring-2 ring-red-500/40'
+            : isWarning
+            ? 'bg-[#394253] border-[#FFCC00]/70 text-[#FFCC00]'
+            : 'bg-[#525D73] border-slate-400 text-white'
+        }`}
+      >
+        <span className="text-sm">⏱</span>
+        <span className="font-mono font-black text-sm tracking-tight">{timeLeft}s</span>
+        <div className="w-2 h-2 rounded-full bg-current animate-ping"></div>
+      </div>
+    );
+  }
+
+  const radius = 28;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (timeLeft / totalTime) * circumference;
 
-  const getTimerColor = () => {
-    if (timeLeft <= 20) return 'stroke-red-600';
-    if (timeLeft <= 40) return 'stroke-[#D40511]';
-    return 'stroke-gray-700';
-  };
-
   return (
-    <div className={`relative w-32 h-32 ${timeLeft <= 20 ? 'animate-pulse' : ''}`}>
-      <svg className="w-full h-full" viewBox="0 0 120 120">
-        {/* Background circle */}
+    <div className={`relative w-20 h-20 sm:w-24 sm:h-24 ${isUrgent ? 'animate-pulse' : ''}`}>
+      <svg className="w-full h-full" viewBox="0 0 70 70">
         <circle
-          className="stroke-current text-gray-300"
-          strokeWidth="10"
+          className="stroke-slate-400"
+          strokeWidth="6"
           fill="transparent"
           r={radius}
-          cx="60"
-          cy="60"
+          cx="35"
+          cy="35"
         />
-        {/* Progress circle */}
         <circle
-          className={`transition-stroke duration-1000 ease-linear ${getTimerColor()}`}
-          strokeWidth="10"
+          className={`transition-all duration-1000 ease-linear ${
+            isUrgent ? 'stroke-[#D40511]' : isWarning ? 'stroke-[#FFCC00]' : 'stroke-white'
+          }`}
+          strokeWidth="6"
           strokeDasharray={circumference}
           strokeDashoffset={offset}
           strokeLinecap="round"
           fill="transparent"
           r={radius}
-          cx="60"
-          cy="60"
-          transform="rotate(-90 60 60)"
+          cx="35"
+          cy="35"
+          transform="rotate(-90 35 35)"
         />
       </svg>
-      <div className="absolute inset-0 flex items-center justify-center">
-        <span className={`text-4xl md:text-5xl font-bold ${timeLeft <= 20 ? 'text-red-600' : 'text-gray-800'}`}>
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <span
+          className={`font-mono font-black text-xl sm:text-2xl ${
+            isUrgent ? 'text-[#D40511]' : isWarning ? 'text-[#FFCC00]' : 'text-white'
+          }`}
+        >
           {timeLeft}
+        </span>
+        <span className="text-[9px] uppercase tracking-wider text-slate-200 font-bold -mt-1">
+          SEC
         </span>
       </div>
     </div>
